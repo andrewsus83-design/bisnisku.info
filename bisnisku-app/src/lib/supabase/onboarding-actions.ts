@@ -18,7 +18,7 @@ function generateSlug(name: string): string {
 }
 
 /**
- * Complete onboarding:
+ * Complete onboarding via RPC function (bypasses PostgREST schema cache issues):
  * 1. Ensure profile exists
  * 2. Create or update business record
  * 3. Mark profile onboarding_done = true
@@ -52,102 +52,32 @@ export async function completeOnboarding(input: OnboardingInput) {
     tiktok,
   } = parsed.data;
 
-  // Ensure profile exists (FK constraint: businesses.owner_id → profiles.id)
-  const { data: existingProfile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", user.id)
-    .maybeSingle();
+  // Generate unique slug
+  let slug = generateSlug(businessName);
+  slug = `${slug}-${Date.now().toString(36)}`;
 
-  if (!existingProfile) {
-    const { error: profileCreateError } = await supabase
-      .from("profiles")
-      .insert({
-        id: user.id,
-        full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
-        email: user.email || "",
-        onboarding_done: false,
-      });
+  // Call RPC function (SECURITY DEFINER — bypasses RLS & schema cache)
+  const { data, error: rpcError } = await supabase.rpc("complete_onboarding", {
+    p_business_name: businessName,
+    p_slug: slug,
+    p_vertical: vertical,
+    p_city: city,
+    p_website: website || null,
+    p_phone: whatsapp || null,
+    p_whatsapp: whatsapp || null,
+    p_instagram: instagram || null,
+    p_facebook: facebook || null,
+    p_tiktok: tiktok || null,
+  });
 
-    if (profileCreateError) {
-      console.error("Profile create error:", profileCreateError);
-      return { error: `Gagal membuat profil: ${profileCreateError.message}` };
-    }
+  if (rpcError) {
+    console.error("Onboarding RPC error:", rpcError);
+    return { error: `Gagal menyelesaikan onboarding: ${rpcError.message}` };
   }
 
-  // Check if business already exists for this user
-  const { data: existingBiz } = await supabase
-    .from("businesses")
-    .select("id")
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (existingBiz) {
-    // Update existing business
-    const { error: updateError } = await supabase
-      .from("businesses")
-      .update({
-        name: businessName,
-        vertical,
-        city,
-        website: website || null,
-        phone: whatsapp || null,
-        whatsapp: whatsapp || null,
-        instagram: instagram || null,
-        facebook: facebook || null,
-        tiktok: tiktok || null,
-      })
-      .eq("id", existingBiz.id);
-
-    if (updateError) {
-      console.error("Business update error:", updateError);
-      return { error: `Gagal update bisnis: ${updateError.message}` };
-    }
-  } else {
-    // Generate unique slug
-    let slug = generateSlug(businessName);
-    const { data: slugExists } = await supabase
-      .from("businesses")
-      .select("slug")
-      .eq("slug", slug)
-      .maybeSingle();
-
-    if (slugExists) {
-      slug = `${slug}-${Date.now().toString(36)}`;
-    }
-
-    // Create new business
-    const { error: bizError } = await supabase.from("businesses").insert({
-      owner_id: user.id,
-      name: businessName,
-      slug,
-      vertical,
-      city,
-      website: website || null,
-      phone: whatsapp || null,
-      whatsapp: whatsapp || null,
-      instagram: instagram || null,
-      facebook: facebook || null,
-      tiktok: tiktok || null,
-      plan: "free",
-      is_verified: true,
-    });
-
-    if (bizError) {
-      console.error("Business insert error:", bizError);
-      return { error: `Gagal membuat bisnis: ${bizError.message}` };
-    }
-  }
-
-  // Mark onboarding as done
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .update({ onboarding_done: true })
-    .eq("id", user.id);
-
-  if (profileError) {
-    console.error("Profile update error:", profileError);
-    return { error: `Gagal menyelesaikan onboarding: ${profileError.message}` };
+  // Check if RPC returned an error
+  if (data && typeof data === "object" && "error" in data) {
+    return { error: String(data.error) };
   }
 
   redirect("/dashboard");
