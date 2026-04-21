@@ -1,10 +1,7 @@
 "use server";
 
-import { createClient as createAuthClient } from "@/lib/supabase/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { env } from "@/config/env";
-import { serverEnv } from "@/config/env";
 import {
   onboardingSchema,
   type OnboardingInput,
@@ -24,25 +21,13 @@ function generateSlug(name: string): string {
 }
 
 /**
- * Create a Supabase admin client (service_role key).
- * Bypasses PostgREST schema cache AND RLS — use only in server actions.
- */
-function createAdminClient() {
-  return createClient(env.SUPABASE_URL, serverEnv.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
-
-/**
- * Complete onboarding using admin client (bypasses PostgREST schema cache):
- * 1. Verify user is authenticated
- * 2. Ensure profile exists
- * 3. Create or update business record
- * 4. Mark profile onboarding_done = true
+ * Complete onboarding via RPC function (SECURITY DEFINER — bypasses RLS):
+ * 1. Ensure profile exists
+ * 2. Create or update business record
+ * 3. Mark profile onboarding_done = true
  */
 export async function completeOnboarding(input: OnboardingInput) {
-  // Use the auth client to verify the user session
-  const supabase = await createAuthClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -74,97 +59,28 @@ export async function completeOnboarding(input: OnboardingInput) {
   let slug = generateSlug(businessName);
   slug = `${slug}-${Date.now().toString(36)}`;
 
-  // Use admin client to bypass PostgREST schema cache
-  const admin = createAdminClient();
+  // Call RPC function (SECURITY DEFINER — bypasses RLS)
+  const { data, error: rpcError } = await supabase.rpc("complete_onboarding", {
+    p_business_name: businessName,
+    p_slug: slug,
+    p_vertical: vertical,
+    p_city: city,
+    p_website: website || null,
+    p_phone: whatsapp || null,
+    p_whatsapp: whatsapp || null,
+    p_instagram: instagram || null,
+    p_facebook: facebook || null,
+    p_tiktok: tiktok || null,
+  });
 
-  try {
-    // Step 1: Ensure profile exists (upsert)
-    const { error: profileError } = await admin.from("profiles").upsert(
-      {
-        id: user.id,
-        full_name:
-          user.user_metadata?.full_name ??
-          user.email?.split("@")[0] ??
-          "User",
-        email: user.email,
-        onboarding_done: false,
-      },
-      { onConflict: "id", ignoreDuplicates: true }
-    );
+  if (rpcError) {
+    console.error("Onboarding RPC error:", rpcError);
+    return { error: `Gagal menyelesaikan onboarding: ${rpcError.message}` };
+  }
 
-    if (profileError) {
-      console.error("Profile upsert error:", profileError);
-      return { error: `Gagal membuat profil: ${profileError.message}` };
-    }
-
-    // Step 2: Check if business already exists for this user
-    const { data: existingBiz } = await admin
-      .from("businesses")
-      .select("id")
-      .eq("owner_id", user.id)
-      .limit(1)
-      .single();
-
-    if (existingBiz) {
-      // Update existing business
-      const { error: updateError } = await admin
-        .from("businesses")
-        .update({
-          name: businessName,
-          vertical,
-          city,
-          website: website || null,
-          phone: whatsapp || null,
-          whatsapp: whatsapp || null,
-          instagram: instagram || null,
-          facebook: facebook || null,
-          tiktok: tiktok || null,
-        })
-        .eq("id", existingBiz.id);
-
-      if (updateError) {
-        console.error("Business update error:", updateError);
-        return { error: `Gagal mengupdate bisnis: ${updateError.message}` };
-      }
-    } else {
-      // Create new business
-      const { error: insertError } = await admin.from("businesses").insert({
-        owner_id: user.id,
-        name: businessName,
-        slug,
-        vertical,
-        city,
-        website: website || null,
-        phone: whatsapp || null,
-        whatsapp: whatsapp || null,
-        instagram: instagram || null,
-        facebook: facebook || null,
-        tiktok: tiktok || null,
-        plan: "free",
-        is_verified: true,
-      });
-
-      if (insertError) {
-        console.error("Business insert error:", insertError);
-        return { error: `Gagal membuat bisnis: ${insertError.message}` };
-      }
-    }
-
-    // Step 3: Mark onboarding as complete
-    const { error: doneError } = await admin
-      .from("profiles")
-      .update({ onboarding_done: true })
-      .eq("id", user.id);
-
-    if (doneError) {
-      console.error("Onboarding done error:", doneError);
-      return {
-        error: `Gagal menyelesaikan onboarding: ${doneError.message}`,
-      };
-    }
-  } catch (err) {
-    console.error("Onboarding unexpected error:", err);
-    return { error: "Terjadi kesalahan. Silakan coba lagi." };
+  // Check if RPC returned an error
+  if (data && typeof data === "object" && "error" in data) {
+    return { error: String(data.error) };
   }
 
   redirect("/dashboard");
