@@ -5,11 +5,14 @@ import {
   MapPin,
   Phone,
   Mail,
-  Globe,
-  Star,
   MessageSquare,
   ExternalLink,
 } from "lucide-react";
+import {
+  getFontFamily,
+  getTextureCSS,
+  type BackgroundTexture,
+} from "@/lib/validations/bio-page";
 
 interface BioPageData {
   business: {
@@ -33,9 +36,14 @@ interface BioPageData {
     theme: {
       primaryColor: string;
       accentColor: string;
-      fontFamily: string;
+      primaryFont?: string;
+      secondaryFont?: string;
+      /** @deprecated — backward compat */
+      fontFamily?: string;
       buttonStyle: string;
       darkMode: boolean;
+      backgroundTheme?: string;
+      backgroundTexture?: string;
     };
     custom_css: string | null;
   };
@@ -73,9 +81,35 @@ function formatPrice(price: number): string {
   }).format(price);
 }
 
+/** Background style for solid or gradient colors */
+function colorBg(color: string): React.CSSProperties {
+  if (color.startsWith("linear-gradient")) return { background: color };
+  return { backgroundColor: color };
+}
+
+/** Extract first hex from gradient or return as-is */
+function extractColor(color: string): string {
+  if (color.startsWith("linear-gradient")) {
+    const m = color.match(/#[0-9A-Fa-f]{6}/);
+    return m ? m[0] : "#0F172A";
+  }
+  return color;
+}
+
+/** Light tint background */
+function tintBg(color: string, opacity: string): React.CSSProperties {
+  return { backgroundColor: extractColor(color) + opacity };
+}
+
 export function PublicBioPage({ data }: { data: BioPageData }) {
   const { business, bioPage, blocks, services, menuItems } = data;
   const theme = bioPage.theme;
+
+  // Resolve fonts (backward compat: fontFamily → primaryFont)
+  const headingFont = getFontFamily(theme.primaryFont || theme.fontFamily || "Plus Jakarta Sans");
+  const bodyFont = getFontFamily(theme.secondaryFont || "Inter");
+  const texture = (theme.backgroundTexture || "none") as BackgroundTexture;
+  const textureStyle = getTextureCSS(texture, theme.darkMode);
 
   const bg = theme.darkMode ? "#0F172A" : "#FFFFFF";
   const text = theme.darkMode ? "#F1F5F9" : "#0F172A";
@@ -91,21 +125,28 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
   return (
     <div
-      className="min-h-screen"
-      style={{ backgroundColor: bg, color: text, fontFamily: theme.fontFamily }}
+      className="relative mx-auto min-h-screen w-full lg:w-4/5"
+      style={{ backgroundColor: bg, color: text, fontFamily: bodyFont }}
     >
+      {/* Background texture overlay */}
+      {texture !== "none" && (
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          style={textureStyle}
+        />
+      )}
       {/* Custom CSS */}
       {bioPage.custom_css && <style>{bioPage.custom_css}</style>}
 
       {blocks
         .filter((b) => b.is_visible)
         .map((block, i) => (
-          <section key={i}>
+          <section key={i} className="relative z-10">
             {/* ── Hero ── */}
             {block.type === "hero" && (
               <div
                 className="relative flex min-h-[280px] flex-col items-center justify-center px-6 py-16 text-center"
-                style={{ backgroundColor: theme.primaryColor }}
+                style={colorBg(theme.primaryColor)}
               >
                 {(block.content.imageUrl as string) && (
                   <div
@@ -125,14 +166,30 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
                   )}
                   <h1
                     className="text-3xl font-bold text-white"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     {(block.content.title as string) || business.name}
                   </h1>
                   <p className="mt-2 text-base text-white/80">
                     {(block.content.subtitle as string) || business.description}
                   </p>
-                  {business.whatsapp && (
+                  {/* CTA Button */}
+                  {(block.content.ctaText as string) ? (
+                    <a
+                      href={(block.content.ctaUrl as string) || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold"
+                      style={{
+                        backgroundColor: theme.accentColor,
+                        color: theme.primaryColor,
+                        borderRadius: btnRadius,
+                      }}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {block.content.ctaText as string}
+                    </a>
+                  ) : business.whatsapp ? (
                     <a
                       href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`}
                       target="_blank"
@@ -146,17 +203,17 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
                       <MessageSquare className="h-4 w-4" />
                       Hubungi via WhatsApp
                     </a>
-                  )}
+                  ) : null}
                 </div>
               </div>
             )}
 
             {/* ── About ── */}
             {block.type === "about" && (
-              <div className="mx-auto max-w-2xl px-6 py-10">
+              <div className="mx-auto max-w-2xl px-6 py-10" style={tintBg(theme.accentColor, "10")}>
                 <h2
                   className="mb-4 text-xl font-bold"
-                  style={{ fontFamily: theme.fontFamily }}
+                  style={{ fontFamily: headingFont }}
                 >
                   {(block.content.heading as string) || "Tentang Kami"}
                 </h2>
@@ -170,11 +227,11 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Services ── */}
             {block.type === "services" && services.length > 0 && (
-              <div className="px-6 py-10" style={{ backgroundColor: muted }}>
+              <div className="px-6 py-10" style={tintBg(theme.primaryColor, "0A")}>
                 <div className="mx-auto max-w-2xl">
                   <h2
                     className="mb-6 text-xl font-bold"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     Layanan Kami
                   </h2>
@@ -232,11 +289,11 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Menu ── */}
             {block.type === "menu" && menuItems.length > 0 && (
-              <div className="px-6 py-10">
+              <div className="px-6 py-10" style={tintBg(theme.accentColor, "08")}>
                 <div className="mx-auto max-w-2xl">
                   <h2
                     className="mb-6 text-xl font-bold"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     Menu
                   </h2>
@@ -304,11 +361,11 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Contact ── */}
             {block.type === "contact" && (
-              <div className="px-6 py-10">
+              <div className="px-6 py-10" style={tintBg(theme.accentColor, "08")}>
                 <div className="mx-auto max-w-2xl">
                   <h2
                     className="mb-4 text-xl font-bold"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     Hubungi Kami
                   </h2>
@@ -361,7 +418,7 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Social Links ── */}
             {block.type === "social_links" && (
-              <div className="px-6 py-8" style={{ backgroundColor: muted }}>
+              <div className="px-6 py-8" style={tintBg(theme.primaryColor, "0A")}>
                 <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-4">
                   {business.instagram && (
                     <SocialLink
@@ -397,11 +454,11 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Gallery (placeholder) ── */}
             {block.type === "gallery" && (
-              <div className="px-6 py-10" style={{ backgroundColor: muted }}>
+              <div className="px-6 py-10" style={tintBg(theme.primaryColor, "08")}>
                 <div className="mx-auto max-w-2xl">
                   <h2
                     className="mb-4 text-xl font-bold"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     {(block.content.heading as string) || "Galeri"}
                   </h2>
@@ -414,11 +471,11 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
             {/* ── Location Map ── */}
             {block.type === "location_map" && (
-              <div className="px-6 py-10" style={{ backgroundColor: muted }}>
+              <div className="px-6 py-10" style={tintBg(theme.primaryColor, "08")}>
                 <div className="mx-auto max-w-2xl">
                   <h2
                     className="mb-4 text-xl font-bold"
-                    style={{ fontFamily: theme.fontFamily }}
+                    style={{ fontFamily: headingFont }}
                   >
                     Lokasi
                   </h2>
@@ -441,7 +498,7 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
             {block.type === "promo_banner" && (
               <div
                 className="px-6 py-10 text-center"
-                style={{ backgroundColor: theme.accentColor + "10" }}
+                style={tintBg(theme.accentColor, "15")}
               >
                 <h2 className="text-xl font-bold">
                   {(block.content.title as string) || "Promo Spesial"}
@@ -456,7 +513,7 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
                     rel="noopener noreferrer"
                     className="mt-4 inline-block px-6 py-2.5 text-sm font-semibold text-white"
                     style={{
-                      backgroundColor: theme.primaryColor,
+                      ...colorBg(theme.primaryColor),
                       borderRadius: btnRadius,
                     }}
                   >
@@ -481,7 +538,7 @@ export function PublicBioPage({ data }: { data: BioPageData }) {
 
       {/* Footer */}
       <footer
-        className="px-6 py-6 text-center text-xs"
+        className="relative z-10 px-6 py-6 text-center text-xs"
         style={{ color: mutedText, borderTop: `1px solid ${borderColor}` }}
       >
         <p>
@@ -528,7 +585,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-      style={{ backgroundColor: color }}
+      style={colorBg(color)}
     >
       <ExternalLink className="h-3.5 w-3.5" />
       {label}

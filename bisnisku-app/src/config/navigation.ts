@@ -43,7 +43,7 @@ export const sidebarNav: NavGroup[] = [
   {
     title: "Revenue",
     items: [
-      { label: "Pembayaran", href: "/dashboard/payments", icon: CreditCard, sprint: 3 },
+      { label: "Pembayaran", href: "/dashboard/payments", icon: CreditCard, sprint: 3, disabled: true },
       { label: "WhatsApp", href: "/dashboard/whatsapp", icon: MessageSquare, sprint: 4 },
       { label: "CRM", href: "/dashboard/crm", icon: Users },
       { label: "Loyalty", href: "/dashboard/loyalty", icon: Gift, sprint: 6 },
@@ -76,6 +76,7 @@ export const sidebarNav: NavGroup[] = [
   {
     title: "Pengaturan",
     items: [
+      { label: "Billing", href: "/dashboard/settings/billing", icon: CreditCard },
       { label: "Pengaturan", href: "/dashboard/settings", icon: Settings },
     ],
   },

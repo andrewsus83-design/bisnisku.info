@@ -68,6 +68,25 @@ export function BlockSettings() {
                 folder="hero"
                 placeholder="Upload atau masukkan URL gambar"
               />
+              <div className="border-t border-border pt-3">
+                <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  CTA Button
+                </p>
+                <FieldInput
+                  label="Teks Tombol CTA"
+                  value={(block.content.ctaText as string) || ""}
+                  onChange={(v) => updateBlockContent(block.id, { ctaText: v })}
+                  placeholder="Pesan Sekarang"
+                />
+                <div className="mt-3">
+                  <FieldInput
+                    label="Link URL Tujuan"
+                    value={(block.content.ctaUrl as string) || ""}
+                    onChange={(v) => updateBlockContent(block.id, { ctaUrl: v })}
+                    placeholder="https://wa.me/6281234567890"
+                  />
+                </div>
+              </div>
             </>
           )}
 

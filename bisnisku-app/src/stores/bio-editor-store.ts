@@ -64,10 +64,12 @@ export const useBioEditorStore = create<BioEditorState>((set) => ({
   theme: {
     primaryColor: "#0F172A",
     accentColor: "#FFCC00",
-    fontFamily: "Inter",
+    primaryFont: "Plus Jakarta Sans",
+    secondaryFont: "Inter",
     buttonStyle: "rounded",
     darkMode: false,
     backgroundTheme: "none",
+    backgroundTexture: "none",
   },
   status: "draft",
   seoTitle: "",

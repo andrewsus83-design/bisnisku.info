@@ -8,6 +8,11 @@ import {
   Caveat,
   Playfair_Display,
   Space_Grotesk,
+  Montserrat,
+  Raleway,
+  Nunito,
+  DM_Sans,
+  Lora,
 } from "next/font/google";
 import { Providers } from "@/components/providers";
 import "./globals.css";
@@ -65,6 +70,41 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const raleway = Raleway({
+  variable: "--font-raleway",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "600", "700"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: {
     default: "bisnisku.info — Partner Cerdas untuk Pertumbuhan Bisnis Anda",
@@ -108,7 +148,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable} ${merriweather.variable} ${courierPrime.variable} ${caveat.variable} ${playfairDisplay.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable} ${merriweather.variable} ${courierPrime.variable} ${caveat.variable} ${playfairDisplay.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${raleway.variable} ${nunito.variable} ${dmSans.variable} ${lora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
           <Providers>{children}</Providers>
