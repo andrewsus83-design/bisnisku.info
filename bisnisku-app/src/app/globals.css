@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ================================================
+   BISNISKU.INFO — Design System v3.0 Tokens
+   ================================================ */
+
+:root {
+  /* --- Brand Colors --- */
+  --brand-primary: #FFCC00;        /* Cyber Yellow */
+  --brand-dark: #0F172A;           /* Deep Slate */
+  --brand-dark-hover: #1E293B;     /* Slate 800 */
+
+  /* --- Data Visualization --- */
+  --data-viz-1: #3B82F6;           /* Blue */
+  --data-viz-2: #8B5CF6;           /* Purple */
+  --data-viz-3: #F59E0B;           /* Amber */
+  --data-viz-4: #EC4899;           /* Pink */
+
+  /* --- Semantic --- */
+  --semantic-success: #10B981;     /* Emerald */
+  --semantic-warning: #F59E0B;     /* Amber */
+  --semantic-error: #EF4444;       /* Red */
+  --semantic-info: #3B82F6;        /* Blue */
+
+  /* --- Surface --- */
+  --background: #FFFFFF;
+  --foreground: #0F172A;
+  --muted: #F1F5F9;                /* Slate 100 */
+  --muted-foreground: #64748B;     /* Slate 500 */
+  --border: #E2E8F0;               /* Slate 200 */
+  --input: #E2E8F0;
+  --ring: #FFCC00;
+
+  /* --- Sidebar --- */
+  --sidebar-bg: #0F172A;
+  --sidebar-text: #CBD5E1;
+  --sidebar-active: #FFCC00;
+}
+
+@theme inline {
+  /* --- Colors --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-dark-hover: var(--brand-dark-hover);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--semantic-success);
+  --color-warning: var(--semantic-warning);
+  --color-error: var(--semantic-error);
+  --color-info: var(--semantic-info);
+  --color-viz-1: var(--data-viz-1);
+  --color-viz-2: var(--data-viz-2);
+  --color-viz-3: var(--data-viz-3);
+  --color-viz-4: var(--data-viz-4);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-active: var(--sidebar-active);
+
+  /* --- Fonts (Design System v3.0) --- */
+  --font-heading: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* --- Shadows (Elevation) --- */
+  --shadow-low: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0px 10px 15px rgba(0, 0, 0, 0.05);
+  --shadow-high: 0px 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ================================================
+   Base Styles
+   ================================================ */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Spacing system: always use multiples of 8px */
+/* Tailwind utilities: p-2(8px), p-4(16px), p-6(24px), p-8(32px), p-10(40px), p-12(48px), p-16(64px) */
+
+/* ================================================
+   Scrollbar Styling
+   ================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}

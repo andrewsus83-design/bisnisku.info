@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 2 Preview — Bio Page Builder | bisnisku.info</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ════════════════════════════════════════════════
+   BISNISKU DESIGN SYSTEM v3.0 — Token Layer
+   ════════════════════════════════════════════════ */
+:root {
+  /* Brand */
+  --brand-primary: #FFCC00;
+  --brand-primary-hover: #E6B800;
+  --brand-primary-10: rgba(255,204,0,0.10);
+  --brand-primary-20: rgba(255,204,0,0.20);
+  --brand-dark: #0F172A;
+  --brand-dark-hover: #1E293B;
+  --brand-dark-60: rgba(15,23,42,0.60);
+  --brand-dark-90: rgba(15,23,42,0.90);
+
+  /* Semantic */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  /* Surface */
+  --bg: #FFFFFF;
+  --bg-muted: #F1F5F9;
+  --bg-subtle: #F8FAFC;
+  --fg: #0F172A;
+  --fg-muted: #64748B;
+  --fg-subtle: #94A3B8;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
+
+  /* Elevation (shadows) */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.10);
+  --shadow-brand: 0 4px 16px rgba(255,204,0,0.25);
+  --shadow-wa: 0 4px 16px rgba(37,211,102,0.30);
+
+  /* Typography */
+  --font-h: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Type scale (based on 16px) */
+  --text-2xs: 10px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+
+  /* Line heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  /* Spacing (8px grid) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  /* Icon sizing */
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+
+  /* WhatsApp */
+  --wa-green: #25D366;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ════════════════════════════════════════════════
+   RESET & BASE
+   ════════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+body { font-family:var(--font-b); background:var(--brand-dark); color:var(--fg); line-height:var(--leading-normal); font-size:var(--text-base); }
+a { color:inherit; text-decoration:none; }
+img { display:block; max-width:100%; }
+button { font-family:var(--font-b); cursor:pointer; }
+h1,h2,h3,h4 { font-family:var(--font-h); line-height:var(--leading-tight); letter-spacing:-0.02em; }
+
+/* ════════════════════════════════════════════════
+   ICON SYSTEM — Bisnisku Icon Set v1.0
+
+   Design spec:
+   • Stroke-based, 24x24 viewBox
+   • Stroke width: 1.8px (lighter than Lucide 2px for elegance)
+   • Round caps & joins
+   • Consistent 2px padding inside viewBox
+   • Color inherited via currentColor
+   ════════════════════════════════════════════════ */
+.bi { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.bi svg { width:1em; height:1em; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.bi-xs { font-size:var(--icon-xs); }
+.bi-sm { font-size:var(--icon-sm); }
+.bi-md { font-size:var(--icon-md); }
+.bi-lg { font-size:var(--icon-lg); }
+.bi-xl { font-size:var(--icon-xl); }
+
+/* ════════════════════════════════════════════════
+   ANIMATIONS
+   ════════════════════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(37,211,102,0.4)} 70%{box-shadow:0 0 0 12px rgba(37,211,102,0)} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0)} }
+@keyframes glow { 0%,100%{box-shadow:0 0 12px rgba(255,204,0,0.2)} 50%{box-shadow:0 0 24px rgba(255,204,0,0.4)} }
+@keyframes scaleIn { from{transform:scale(0.95);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* ════════════════════════════════════════════════
+   TOP NAV
+   ════════════════════════════════════════════════ */
+.top-nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  display:flex; align-items:center; justify-content:center; gap:var(--sp-2);
+  padding:var(--sp-3) var(--sp-4); height:56px;
+  background:rgba(15,23,42,0.92); backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(255,204,0,0.08);
+}
+.nav-logo { position:absolute; left:var(--sp-5); display:flex; align-items:center; gap:var(--sp-3); }
+.nav-logo-mark {
+  width:28px; height:28px; border-radius:var(--radius-md);
+  overflow:hidden; flex-shrink:0;
+}
+.nav-logo-mark img { width:100%; height:100%; object-fit:contain; }
+.nav-logo-text { color:white; font-family:var(--font-h); font-weight:700; font-size:var(--text-sm); letter-spacing:-0.02em; }
+.nav-badge {
+  background:var(--brand-primary); color:var(--brand-dark);
+  font-size:var(--text-2xs); font-weight:700; padding:2px var(--sp-2); border-radius:var(--radius-full);
+  font-family:var(--font-h); letter-spacing:0.02em;
+}
+.nav-btn {
+  padding:var(--sp-2) var(--sp-4); border-radius:var(--radius-md);
+  border:1px solid rgba(255,255,255,0.08); background:transparent;
+  color:rgba(255,255,255,0.5); font-size:var(--text-xs); font-weight:600;
+  transition:all var(--duration-normal) var(--ease-out);
+  display:flex; align-items:center; gap:var(--sp-2);
+}
+.nav-btn:hover { color:rgba(255,255,255,0.8); border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.04); }
+.nav-btn.active { color:var(--brand-dark); background:var(--brand-primary); border-color:var(--brand-primary); font-weight:700; }
+
+/* ════════════════════════════════════════════════
+   VIEWS
+   ════════════════════════════════════════════════ */
+.view { display:none; padding-top:56px; }
+.view.active { display:block; }
+
+/* ════════════════════════════════════════════════
+   VIEW 1: EDITOR
+   ════════════════════════════════════════════════ */
+.editor-view { background:var(--bg-subtle); min-height:100vh; }
+
+.editor-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--sp-3) var(--sp-5); background:var(--bg);
+  border-bottom:1px solid var(--border); box-shadow:var(--shadow-xs);
+}
+.tab-group { display:flex; gap:var(--sp-1); }
+.tab-btn {
+  display:flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) var(--sp-4);
+  border-radius:var(--radius-md); border:none; font-size:var(--text-xs); font-weight:600;
+  background:transparent; color:var(--fg-muted); transition:all var(--duration-fast);
+}
+.tab-btn.active { background:var(--brand-dark); color:white; box-shadow:var(--shadow-sm); }
+.tab-btn:hover:not(.active) { background:var(--bg-muted); }
+
+.toolbar-right { display:flex; align-items:center; gap:var(--sp-2); }
+.device-toggle { display:flex; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+.device-btn {
+  padding:var(--sp-2) var(--sp-3); border:none; background:transparent;
+  color:var(--fg-muted); transition:all var(--duration-fast); display:flex; align-items:center;
+}
+.device-btn.active { background:var(--brand-dark); color:white; }
+
+.btn-outline {
+  display:flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) var(--sp-4);
+  border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg);
+  font-size:var(--text-xs); font-weight:600; color:var(--fg);
+  transition:all var(--duration-fast);
+}
+.btn-outline:hover { background:var(--bg-muted); box-shadow:var(--shadow-sm); }
+
+.btn-solid {
+  display:flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) var(--sp-4);
+  border-radius:var(--radius-md); border:none; background:var(--brand-dark); color:white;
+  font-size:var(--text-xs); font-weight:600; box-shadow:var(--shadow-sm);
+  transition:all var(--duration-normal) var(--ease-out);
+}
+.btn-solid:hover { background:var(--brand-dark-hover); box-shadow:var(--shadow-md); transform:translateY(-1px); }
+
+/* Split */
+.editor-split { display:flex; height:calc(100vh - 56px - 49px); }
+
+/* Sidebar */
+.editor-sidebar {
+  width:296px; flex-shrink:0; overflow-y:auto;
+  border-right:1px solid var(--border); background:var(--bg);
+}
+.sidebar-header {
+  padding:var(--sp-4) var(--sp-4) var(--sp-3);
+  font-family:var(--font-h); font-size:11px; font-weight:700;
+  color:var(--fg-subtle); text-transform:uppercase; letter-spacing:0.06em;
+}
+
+/* Block items */
+.block-item {
+  display:flex; align-items:center; gap:var(--sp-3);
+  padding:var(--sp-2) var(--sp-3); margin:0 var(--sp-2) 2px;
+  border-radius:var(--radius-lg); cursor:pointer;
+  transition:all var(--duration-fast); border:1.5px solid transparent;
+}
+.block-item:hover { background:var(--bg-muted); }
+.block-item.selected { background:var(--brand-primary-10); border-color:var(--brand-primary); }
+.block-icon-wrap {
+  width:32px; height:32px; border-radius:var(--radius-md);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.block-label { font-size:var(--text-sm); font-weight:500; flex:1; color:var(--fg); }
+.block-actions { display:flex; gap:2px; opacity:0; transition:opacity var(--duration-fast); }
+.block-item:hover .block-actions { opacity:1; }
+.block-act {
+  width:24px; height:24px; border-radius:var(--radius-sm); border:none;
+  background:transparent; color:var(--fg-subtle); display:flex; align-items:center; justify-content:center;
+  transition:all var(--duration-fast);
+}
+.block-act:hover { background:var(--bg); color:var(--fg); box-shadow:var(--shadow-xs); }
+
+/* Add blocks */
+.add-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-2);
+  padding:var(--sp-3); border-top:1px solid var(--border);
+}
+.add-btn {
+  display:flex; flex-direction:column; align-items:center; gap:var(--sp-1);
+  padding:var(--sp-3) var(--sp-1); border-radius:var(--radius-lg);
+  border:1.5px dashed var(--border); background:transparent;
+  transition:all var(--duration-fast);
+}
+.add-btn:hover { border-color:var(--brand-primary); background:var(--brand-primary-10); }
+.add-btn .add-icon { color:var(--fg-muted); }
+.add-btn .add-label { font-size:var(--text-2xs); font-weight:600; color:var(--fg-muted); }
+
+/* Theme sidebar */
+.theme-section { padding:var(--sp-4); }
+.theme-section + .theme-section { border-top:1px solid var(--border); }
+.theme-label { font-size:11px; font-weight:700; color:var(--fg-subtle); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:var(--sp-3); }
+.color-grid { display:flex; gap:var(--sp-2); flex-wrap:wrap; margin-bottom:var(--sp-4); }
+.color-dot {
+  width:32px; height:32px; border-radius:var(--radius-md); cursor:pointer;
+  border:2px solid transparent; transition:all var(--duration-fast); position:relative;
+}
+.color-dot:hover { transform:scale(1.1); }
+.color-dot.active { border-color:var(--brand-primary); box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--brand-primary); }
+.input-field {
+  width:100%; padding:var(--sp-2) var(--sp-3); border:1.5px solid var(--border);
+  border-radius:var(--radius-md); font-size:var(--text-xs); font-family:var(--font-b);
+  outline:none; transition:border-color var(--duration-fast); color:var(--fg);
+}
+.input-field:focus { border-color:var(--brand-primary); }
+.input-label { display:block; font-size:var(--text-xs); font-weight:600; color:var(--fg); margin-bottom:var(--sp-1); }
+.input-hint { float:right; font-weight:400; color:var(--fg-subtle); }
+.btn-style-group { display:flex; gap:var(--sp-2); }
+.btn-style-opt {
+  padding:var(--sp-2) var(--sp-4); font-size:11px; font-weight:600;
+  background:var(--brand-dark); color:white; border:2px solid transparent;
+  cursor:pointer; transition:all var(--duration-fast);
+}
+.btn-style-opt:hover { opacity:0.85; }
+.btn-style-opt.active { border-color:var(--brand-primary); box-shadow:var(--shadow-brand); }
+
+/* Preview */
+.editor-preview {
+  flex:1; display:flex; align-items:flex-start; justify-content:center;
+  overflow-y:auto; background:linear-gradient(180deg, var(--bg-muted), #E2E8F0); padding:var(--sp-6);
+}
+.phone-frame {
+  width:375px; background:var(--bg); border-radius:var(--radius-2xl);
+  overflow:hidden; box-shadow:var(--shadow-xl), 0 0 0 1px rgba(0,0,0,0.04);
+  transition:width var(--duration-slow) var(--ease-out);
+  animation:scaleIn 0.4s var(--ease-out) both;
+}
+.phone-frame.desktop { width:680px; border-radius:var(--radius-xl); }
+.phone-notch { height:24px; background:#000; display:flex; align-items:center; justify-content:center; }
+.phone-pill { width:72px; height:4px; background:#1a1a1a; border-radius:var(--radius-full); }
+.phone-body { max-height:calc(100vh - 180px); overflow-y:auto; position:relative; }
+.phone-body::-webkit-scrollbar { width:0; }
+
+/* ── Phone preview content ── */
+.ph-hero {
+  position:relative; min-height:220px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; padding:var(--sp-8) var(--sp-5);
+  background:linear-gradient(135deg, #0F172A, #1E293B); overflow:hidden;
+}
+.ph-hero::before {
+  content:''; position:absolute; inset:0;
+  background:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=60') center/cover;
+  opacity:0.12;
+}
+.ph-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, var(--brand-dark-60), var(--brand-dark-90)); }
+.ph-hero > * { position:relative; z-index:1; }
+.ph-logo {
+  width:48px; height:48px; border-radius:var(--radius-lg); margin-bottom:var(--sp-3);
+  background:var(--brand-primary-20); border:1.5px solid rgba(255,204,0,0.3);
+  backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center;
+  animation:float 3s ease-in-out infinite;
+}
+.ph-logo img { width:32px; height:32px; object-fit:contain; }
+.ph-hero h2 { color:white; font-size:var(--text-xl); font-weight:800; }
+.ph-hero p { color:rgba(255,255,255,0.6); font-size:var(--text-xs); margin-top:var(--sp-1); max-width:280px; line-height:var(--leading-relaxed); }
+.ph-wa-btn {
+  display:inline-flex; align-items:center; gap:var(--sp-2); margin-top:var(--sp-4);
+  padding:var(--sp-3) var(--sp-5); border-radius:var(--radius-lg);
+  background:var(--wa-green); color:white; font-size:var(--text-xs); font-weight:600;
+  box-shadow:var(--shadow-wa); transition:all var(--duration-normal) var(--ease-out);
+}
+.ph-wa-btn:hover { transform:translateY(-2px); }
+
+.ph-section { padding:var(--sp-5) var(--sp-4); }
+.ph-section-alt { padding:var(--sp-5) var(--sp-4); background:var(--bg-muted); }
+.ph-h3 { font-size:var(--text-base); font-weight:700; color:var(--fg); margin-bottom:var(--sp-3); }
+.ph-body-text { font-size:var(--text-xs); color:var(--fg-muted); line-height:var(--leading-loose); }
+
+.ph-promo {
+  padding:var(--sp-5) var(--sp-4); text-align:center;
+  background:linear-gradient(135deg, var(--brand-dark), var(--brand-dark-hover));
+  position:relative; overflow:hidden;
+}
+.ph-promo::before {
+  content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px;
+  border-radius:50%; background:radial-gradient(circle, var(--brand-primary-20), transparent 70%);
+}
+.ph-promo > * { position:relative; z-index:1; }
+.ph-promo-badge {
+  display:inline-block; background:var(--brand-primary); color:var(--brand-dark);
+  font-size:var(--text-2xs); font-weight:700; padding:2px var(--sp-3);
+  border-radius:var(--radius-full); margin-bottom:var(--sp-2); font-family:var(--font-h);
+}
+.ph-promo h3 { color:white; font-size:var(--text-sm); font-weight:700; }
+.ph-promo p { color:rgba(255,255,255,0.5); font-size:11px; margin-top:var(--sp-1); }
+
+.ph-svc-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-2); }
+.ph-svc-card { background:var(--bg); border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border); transition:all var(--duration-normal) var(--ease-out); }
+.ph-svc-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.ph-svc-card img { width:100%; height:64px; object-fit:cover; }
+.ph-svc-card .svc-body { padding:var(--sp-3); }
+.ph-svc-card h4 { font-size:var(--text-xs); font-weight:600; color:var(--fg); }
+.ph-svc-card .svc-desc { font-size:var(--text-2xs); color:var(--fg-muted); margin-top:2px; }
+.ph-svc-card .svc-price { font-size:var(--text-xs); font-weight:700; color:var(--brand-primary-hover); margin-top:var(--sp-2); }
+
+.ph-menu-cat { font-size:var(--text-2xs); font-weight:700; color:var(--brand-primary-hover); text-transform:uppercase; letter-spacing:0.05em; margin:var(--sp-4) 0 var(--sp-2); display:flex; align-items:center; gap:var(--sp-2); }
+.ph-menu-cat::before { content:''; width:3px; height:3px; border-radius:50%; background:var(--brand-primary); }
+.ph-menu-item { display:flex; gap:var(--sp-3); padding:var(--sp-3) 0; border-bottom:1px solid var(--border-light); transition:transform var(--duration-fast); }
+.ph-menu-item:hover { transform:translateX(4px); }
+.ph-menu-item img { width:48px; height:48px; border-radius:var(--radius-lg); object-fit:cover; flex-shrink:0; }
+.ph-menu-item .mi-info { flex:1; }
+.ph-menu-item .mi-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.ph-menu-item .mi-name { font-size:var(--text-sm); font-weight:600; color:var(--fg); }
+.ph-menu-item .mi-price { font-size:var(--text-sm); font-weight:700; color:var(--brand-primary-hover); flex-shrink:0; }
+.ph-pop { display:inline-block; background:#FEF3C7; color:#92400E; font-size:8px; font-weight:700; padding:1px 6px; border-radius:var(--radius-full); margin-left:var(--sp-1); vertical-align:middle; }
+.ph-menu-item .mi-desc { font-size:11px; color:var(--fg-muted); margin-top:2px; }
+
+.ph-contact-row { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-2) 0; font-size:var(--text-xs); color:var(--fg-muted); transition:all var(--duration-fast); }
+.ph-contact-row:hover { color:var(--fg); transform:translateX(4px); }
+.ph-contact-icon { width:28px; height:28px; border-radius:var(--radius-md); background:var(--bg-muted); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--fg-muted); }
+
+.ph-social { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--sp-2); padding:var(--sp-5) var(--sp-4); background:var(--bg-muted); }
+.ph-social-btn { display:inline-flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) var(--sp-4); border-radius:var(--radius-full); font-size:11px; font-weight:600; color:white; transition:all var(--duration-normal) var(--ease-out); }
+.ph-social-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+
+.ph-map { height:100px; border-radius:var(--radius-lg); overflow:hidden; position:relative; background:url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=40') center/cover; }
+.ph-map::after { content:''; position:absolute; inset:0; background:linear-gradient(to top, var(--brand-dark-90), transparent 60%); }
+.ph-map-label { position:absolute; bottom:var(--sp-2); left:var(--sp-2); z-index:1; display:flex; align-items:center; gap:var(--sp-1); padding:var(--sp-1) var(--sp-3); border-radius:var(--radius-md); background:rgba(255,255,255,0.9); backdrop-filter:blur(4px); font-size:var(--text-2xs); font-weight:500; color:var(--fg); box-shadow:var(--shadow-sm); }
+
+.ph-footer { padding:var(--sp-4); text-align:center; font-size:var(--text-2xs); color:var(--fg-subtle); border-top:1px solid var(--border); }
+.ph-footer a { color:var(--brand-primary); font-weight:600; }
+
+.ph-wa-float {
+  position:absolute; bottom:var(--sp-3); right:var(--sp-3); z-index:10;
+  width:40px; height:40px; border-radius:50%; background:var(--wa-green);
+  display:flex; align-items:center; justify-content:center; color:white;
+  box-shadow:var(--shadow-wa); animation:pulse-ring 2s infinite;
+}
+
+/* ════════════════════════════════════════════════
+   VIEW 2: PUBLIC PAGE
+   ════════════════════════════════════════════════ */
+.public-view { background:var(--bg); min-height:100vh; }
+
+.pub-hero {
+  position:relative; min-height:440px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+  padding:var(--sp-20) var(--sp-6) var(--sp-16); overflow:hidden;
+}
+.pub-hero-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1400&q=80') center/cover; }
+.pub-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, var(--brand-dark-60) 0%, var(--brand-dark-90) 100%); }
+.pub-hero > * { position:relative; z-index:1; }
+.pub-logo {
+  width:72px; height:72px; border-radius:var(--radius-xl); margin-bottom:var(--sp-5);
+  background:var(--brand-primary-10); border:2px solid rgba(255,204,0,0.25);
+  backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center;
+  animation:float 3s ease-in-out infinite, glow 4s ease-in-out infinite;
+}
+.pub-logo img { width:48px; height:48px; object-fit:contain; }
+.pub-hero h1 { color:white; font-size:var(--text-4xl); font-weight:800; animation:fadeUp 0.5s var(--ease-out) both; }
+.pub-hero .sub { color:rgba(255,255,255,0.65); font-size:var(--text-base); line-height:var(--leading-relaxed); max-width:480px; margin-top:var(--sp-3); animation:fadeUp 0.5s var(--ease-out) 0.1s both; }
+.pub-hero .tags { display:flex; gap:var(--sp-2); margin-top:var(--sp-4); animation:fadeUp 0.5s var(--ease-out) 0.2s both; }
+.pub-hero .tag-pill { padding:var(--sp-1) var(--sp-3); border-radius:var(--radius-full); font-size:var(--text-xs); font-weight:500; color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(4px); display:flex; align-items:center; gap:var(--sp-1); }
+.pub-hero .wa-btn {
+  display:inline-flex; align-items:center; gap:var(--sp-3); margin-top:var(--sp-8);
+  padding:var(--sp-4) var(--sp-8); border-radius:var(--radius-lg);
+  background:var(--wa-green); color:white; font-size:var(--text-sm); font-weight:600;
+  box-shadow:var(--shadow-wa); transition:all var(--duration-normal) var(--ease-out);
+  animation:fadeUp 0.5s var(--ease-out) 0.3s both;
+}
+.pub-hero .wa-btn:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 8px 32px rgba(37,211,102,0.35); }
+
+.pub-stats {
+  display:flex; justify-content:center; gap:var(--sp-12); padding:var(--sp-6);
+  background:var(--brand-dark); border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.pub-stat { text-align:center; }
+.pub-stat .num { font-family:var(--font-h); font-size:var(--text-2xl); font-weight:800; color:var(--brand-primary); }
+.pub-stat .lbl { font-size:var(--text-xs); color:rgba(255,255,255,0.45); margin-top:2px; }
+
+.pub-section { max-width:640px; margin:0 auto; padding:var(--sp-16) var(--sp-6); }
+.pub-section h2 { font-size:var(--text-2xl); font-weight:700; color:var(--fg); margin-bottom:var(--sp-4); }
+.pub-section p { font-size:var(--text-sm); color:var(--fg-muted); line-height:var(--leading-loose); }
+
+.pub-promo {
+  position:relative; padding:var(--sp-12) var(--sp-6); text-align:center; overflow:hidden;
+  background:linear-gradient(135deg, var(--brand-dark), var(--brand-dark-hover));
+}
+.pub-promo::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 50%, var(--brand-primary-10), transparent 50%), radial-gradient(circle at 80% 50%, rgba(255,204,0,0.05), transparent 40%); }
+.pub-promo > * { position:relative; z-index:1; }
+.pub-promo .badge { display:inline-flex; align-items:center; gap:var(--sp-2); background:var(--brand-primary); color:var(--brand-dark); font-size:var(--text-xs); font-weight:700; padding:var(--sp-1) var(--sp-4); border-radius:var(--radius-full); margin-bottom:var(--sp-4); font-family:var(--font-h); }
+.pub-promo h2 { font-size:var(--text-3xl); font-weight:700; color:white; }
+.pub-promo p { font-size:var(--text-sm); color:rgba(255,255,255,0.55); margin-top:var(--sp-2); }
+.pub-promo .cta {
+  display:inline-flex; align-items:center; gap:var(--sp-2); margin-top:var(--sp-6);
+  padding:var(--sp-3) var(--sp-8); border-radius:var(--radius-lg);
+  background:var(--brand-primary); color:var(--brand-dark); font-size:var(--text-sm); font-weight:700;
+  box-shadow:var(--shadow-brand); transition:all var(--duration-normal) var(--ease-out);
+}
+.pub-promo .cta:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(255,204,0,0.35); }
+
+.pub-svc { padding:var(--sp-16) var(--sp-6); background:var(--bg-muted); }
+.pub-svc .inner { max-width:720px; margin:0 auto; }
+.pub-svc h2 { font-size:var(--text-2xl); font-weight:700; color:var(--fg); margin-bottom:var(--sp-6); }
+.pub-svc-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4); }
+.pub-svc-card { background:var(--bg); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border); transition:all var(--duration-normal) var(--ease-out); }
+.pub-svc-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.pub-svc-card img { width:100%; height:140px; object-fit:cover; }
+.pub-svc-card .body { padding:var(--sp-4); }
+.pub-svc-card h3 { font-size:var(--text-sm); font-weight:600; color:var(--fg); }
+.pub-svc-card .desc { font-size:var(--text-xs); color:var(--fg-muted); margin-top:var(--sp-1); line-height:var(--leading-relaxed); }
+.pub-svc-card .meta { display:flex; justify-content:space-between; align-items:center; margin-top:var(--sp-3); }
+.pub-svc-card .price { font-size:var(--text-sm); font-weight:700; color:var(--brand-primary-hover); }
+.pub-svc-card .dur { font-size:var(--text-xs); color:var(--fg-subtle); background:var(--bg-muted); padding:2px var(--sp-2); border-radius:var(--radius-sm); }
+
+.pub-menu { padding:var(--sp-16) var(--sp-6); max-width:640px; margin:0 auto; }
+.pub-menu h2 { font-size:var(--text-2xl); font-weight:700; color:var(--fg); margin-bottom:var(--sp-2); }
+.pub-menu-cat { font-size:var(--text-xs); font-weight:700; color:var(--brand-primary-hover); text-transform:uppercase; letter-spacing:0.05em; margin:var(--sp-6) 0 var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); }
+.pub-menu-cat::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--brand-primary); }
+.pub-menu-item { display:flex; gap:var(--sp-4); padding:var(--sp-4) 0; border-bottom:1px solid var(--border-light); transition:transform var(--duration-fast); }
+.pub-menu-item:hover { transform:translateX(6px); }
+.pub-menu-item img { width:64px; height:64px; border-radius:var(--radius-lg); object-fit:cover; flex-shrink:0; }
+.pub-menu-item .info { flex:1; }
+.pub-menu-item .top { display:flex; justify-content:space-between; align-items:flex-start; gap:var(--sp-3); }
+.pub-menu-item .name { font-size:var(--text-sm); font-weight:600; color:var(--fg); }
+.pub-menu-item .item-price { font-size:var(--text-sm); font-weight:700; color:var(--brand-primary-hover); flex-shrink:0; }
+.pub-pop { display:inline-block; background:#FEF3C7; color:#92400E; font-size:9px; font-weight:700; padding:2px var(--sp-2); border-radius:var(--radius-full); margin-left:var(--sp-1); vertical-align:middle; }
+.pub-menu-item .item-desc { font-size:var(--text-xs); color:var(--fg-muted); margin-top:var(--sp-1); }
+
+.pub-contact { padding:var(--sp-16) var(--sp-6); max-width:640px; margin:0 auto; }
+.pub-contact h2 { font-size:var(--text-2xl); font-weight:700; color:var(--fg); margin-bottom:var(--sp-5); }
+.pub-ct-row { display:flex; align-items:center; gap:var(--sp-4); padding:var(--sp-3) 0; font-size:var(--text-sm); color:var(--fg-muted); transition:all var(--duration-fast); }
+.pub-ct-row:hover { color:var(--fg); transform:translateX(6px); }
+.pub-ct-icon { width:40px; height:40px; border-radius:var(--radius-lg); background:var(--bg-muted); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--fg-muted); transition:background var(--duration-fast); }
+.pub-ct-row:hover .pub-ct-icon { background:#DBEAFE; color:var(--info); }
+
+.pub-social { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--sp-3); padding:var(--sp-8) var(--sp-6); background:var(--bg-muted); }
+.pub-social-btn { display:inline-flex; align-items:center; gap:var(--sp-2); padding:var(--sp-3) var(--sp-5); border-radius:var(--radius-full); font-size:var(--text-sm); font-weight:600; color:white; transition:all var(--duration-normal) var(--ease-out); }
+.pub-social-btn:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+
+.pub-map { padding:var(--sp-16) var(--sp-6); background:var(--bg-muted); }
+.pub-map .inner { max-width:640px; margin:0 auto; }
+.pub-map h2 { font-size:var(--text-2xl); font-weight:700; color:var(--fg); margin-bottom:var(--sp-4); }
+.pub-map-frame { height:220px; border-radius:var(--radius-xl); overflow:hidden; position:relative; background:url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=60') center/cover; }
+.pub-map-frame::after { content:''; position:absolute; inset:0; background:linear-gradient(to top, var(--brand-dark-60), transparent 60%); }
+.pub-map-label { position:absolute; bottom:var(--sp-4); left:var(--sp-4); z-index:1; display:flex; align-items:center; gap:var(--sp-2); padding:var(--sp-3) var(--sp-4); border-radius:var(--radius-lg); background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); font-size:var(--text-sm); font-weight:500; color:var(--fg); box-shadow:var(--shadow-md); }
+
+.pub-footer { padding:var(--sp-6); text-align:center; font-size:var(--text-xs); color:var(--fg-subtle); border-top:1px solid var(--border); }
+.pub-footer a { color:var(--brand-primary); font-weight:600; }
+
+.floating-wa {
+  position:fixed; bottom:var(--sp-8); right:var(--sp-8); z-index:900;
+  width:56px; height:56px; border-radius:50%; background:var(--wa-green); color:white;
+  display:none; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-wa); font-size:var(--text-2xl);
+  transition:transform var(--duration-normal) var(--ease-out);
+  animation:pulse-ring 2s infinite;
+}
+.floating-wa:hover { transform:scale(1.1); }
+
+/* ════════════════════════════════════════════════
+   VIEW 3: SEO
+   ════════════════════════════════════════════════ */
+.seo-view { background:linear-gradient(180deg, var(--bg-subtle), #EFF6FF); min-height:100vh; padding:var(--sp-8) var(--sp-6); }
+.seo-inner { max-width:760px; margin:0 auto; }
+.seo-card { background:var(--bg); border-radius:var(--radius-2xl); padding:var(--sp-6); border:1px solid var(--border); margin-bottom:var(--sp-5); box-shadow:var(--shadow-xs); transition:box-shadow var(--duration-normal); }
+.seo-card:hover { box-shadow:var(--shadow-md); }
+.seo-card h3 { font-size:var(--text-lg); font-weight:700; color:var(--fg); margin-bottom:var(--sp-1); }
+.seo-card .desc { font-size:var(--text-xs); color:var(--fg-muted); margin-bottom:var(--sp-4); }
+
+.serp { background:var(--bg); border-radius:var(--radius-lg); padding:var(--sp-5); border:1px solid #E8EAED; }
+.serp-url { font-size:var(--text-sm); color:#1A73E8; margin-bottom:var(--sp-1); display:flex; align-items:center; gap:var(--sp-2); }
+.serp-fav { width:20px; height:20px; border-radius:50%; background:var(--brand-dark); display:inline-flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; }
+.serp-fav img { width:14px; height:14px; object-fit:contain; }
+.serp-title { font-size:var(--text-lg); color:#1A0DAB; cursor:pointer; line-height:var(--leading-snug); }
+.serp-title:hover { text-decoration:underline; }
+.serp-desc { font-size:var(--text-sm); color:#4D5156; line-height:var(--leading-relaxed); margin-top:var(--sp-1); }
+.serp-rich { margin-top:var(--sp-3); padding-top:var(--sp-3); border-top:1px solid #E8EAED; display:flex; flex-wrap:wrap; gap:var(--sp-4); }
+.serp-rich span { font-size:var(--text-xs); color:#70757A; display:flex; align-items:center; gap:var(--sp-1); }
+.serp-stars { color:#F9AB00; letter-spacing:-1px; }
+
+.code-box {
+  background:var(--brand-dark); border-radius:var(--radius-lg); padding:var(--sp-4); overflow-x:auto;
+  font-family:var(--font-mono); font-size:11px; line-height:var(--leading-loose);
+  color:#CBD5E1; border:1px solid rgba(255,255,255,0.04);
+}
+.code-box .k { color:#7DD3FC; }
+.code-box .s { color:#86EFAC; }
+.code-box .n { color:#FDE68A; }
+.code-box .c { color:#475569; font-style:italic; }
+
+.tag-row { display:flex; flex-wrap:wrap; gap:var(--sp-2); margin-top:var(--sp-3); }
+.tag { display:inline-flex; align-items:center; gap:var(--sp-1); padding:var(--sp-1) var(--sp-3); border-radius:var(--radius-md); font-size:11px; font-weight:600; }
+.tag.g { background:#DCFCE7; color:#166534; }
+.tag.b { background:#DBEAFE; color:#1E40AF; }
+.tag.p { background:#F3E8FF; color:#6B21A8; }
+.tag.a { background:#FEF3C7; color:#92400E; }
+
+.llms-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4); }
+.llms-label { font-size:11px; font-weight:700; color:var(--fg); margin-bottom:var(--sp-2); }
+.llms-box {
+  background:var(--brand-dark); border-radius:var(--radius-lg); padding:var(--sp-4); overflow-x:auto;
+  font-family:var(--font-mono); font-size:var(--text-2xs); line-height:var(--leading-loose);
+  color:#94A3B8; white-space:pre-wrap; border:1px solid rgba(255,255,255,0.04);
+}
+.llms-box .h { color:var(--brand-primary); font-weight:700; }
+.llms-box .q { color:#64748B; font-style:italic; }
+.llms-box .li { color:#7DD3FC; }
+
+@media (max-width:768px) {
+  .pub-svc-grid { grid-template-columns:1fr; }
+  .llms-grid { grid-template-columns:1fr; }
+  .pub-hero h1 { font-size:var(--text-3xl); }
+  .pub-stats { gap:var(--sp-6); }
+  .nav-logo { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SVG ICON DEFINITIONS ═══ -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Block editor icons -->
+    <symbol id="bi-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="bi-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="bi-tag" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></symbol>
+    <symbol id="bi-service" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="bi-menu" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM12 8v8M8 12h8"/></symbol>
+    <symbol id="bi-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+    <symbol id="bi-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="bi-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="bi-map-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="bi-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></symbol>
+    <symbol id="bi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <symbol id="bi-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="bi-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+
+    <!-- Toolbar / UI icons -->
+    <symbol id="bi-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="bi-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="0.01"/><circle cx="17.5" cy="10.5" r="0.01"/><circle cx="8.5" cy="7.5" r="0.01"/><circle cx="6.5" cy="12" r="0.01"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.04-.23-.29-.38-.63-.38-1.01 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.17-4.49-9-10-9z"/></symbol>
+    <symbol id="bi-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
+    <symbol id="bi-smartphone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+    <symbol id="bi-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol>
+    <symbol id="bi-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="bi-chevron-up" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></symbol>
+    <symbol id="bi-chevron-down" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="bi-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="bi-arrow-right" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+
+    <!-- Contact / Social -->
+    <symbol id="bi-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></symbol>
+    <symbol id="bi-message-circle" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></symbol>
+    <symbol id="bi-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></symbol>
+    <symbol id="bi-facebook" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></symbol>
+    <symbol id="bi-external" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+    <symbol id="bi-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="bi-fire" viewBox="0 0 24 24"><path d="M12 12c-2-2.67-4-4-4-6.5a4 4 0 0 1 8 0c0 2.5-2 3.83-4 6.5z"/><path d="M8 21c0-3 2.5-5 4-7 1.5 2 4 4 4 7a4 4 0 0 1-8 0z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-mark"><img src="bisnisku-app/public/images/logo/logo-icon.png" alt="B" onerror="this.parentNode.innerHTML='<div style=&quot;width:28px;height:28px;border-radius:8px;background:var(--brand-primary);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--brand-dark);font-family:var(--font-h)&quot;>B</div>'"></div>
+    <span class="nav-logo-text">bisnisku.info</span>
+    <span class="nav-badge">SPRINT 2</span>
+  </div>
+  <button class="nav-btn active" onclick="switchView('editor',this)">
+    <span class="bi bi-sm"><svg><use href="#bi-palette"/></svg></span>
+    <span>Editor</span>
+  </button>
+  <button class="nav-btn" onclick="switchView('public',this)">
+    <span class="bi bi-sm"><svg><use href="#bi-globe"/></svg></span>
+    <span>Public Page</span>
+  </button>
+  <button class="nav-btn" onclick="switchView('seo',this)">
+    <span class="bi bi-sm"><svg><use href="#bi-search"/></svg></span>
+    <span>SEO & AI</span>
+  </button>
+</nav>
+
+<!-- ═══ VIEW 1: EDITOR ═══ -->
+<div id="view-editor" class="view active editor-view">
+  <div class="editor-toolbar">
+    <div class="tab-group">
+      <button class="tab-btn active" id="tabBlocks" onclick="editorTab('blocks')">
+        <span class="bi bi-sm"><svg><use href="#bi-layers"/></svg></span> Blok
+      </button>
+      <button class="tab-btn" id="tabTheme" onclick="editorTab('theme')">
+        <span class="bi bi-sm"><svg><use href="#bi-palette"/></svg></span> Tema
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <div class="device-toggle">
+        <button class="device-btn" id="devD" onclick="setDevice('desktop')"><span class="bi bi-sm"><svg><use href="#bi-monitor"/></svg></span></button>
+        <button class="device-btn active" id="devM" onclick="setDevice('mobile')"><span class="bi bi-sm"><svg><use href="#bi-smartphone"/></svg></span></button>
+      </div>
+      <button class="btn-outline"><span class="bi bi-sm"><svg><use href="#bi-save"/></svg></span> Simpan</button>
+      <button class="btn-solid"><span class="bi bi-sm"><svg><use href="#bi-globe"/></svg></span> Publish</button>
+    </div>
+  </div>
+
+  <div class="editor-split">
+    <!-- Sidebar: Blocks -->
+    <div class="editor-sidebar" id="sideBlocks">
+      <div class="sidebar-header">Blok Aktif</div>
+      <div class="block-item selected">
+        <div class="block-icon-wrap" style="background:#DBEAFE;color:#1E40AF;"><span class="bi bi-md"><svg><use href="#bi-home"/></svg></span></div>
+        <span class="block-label">Hero</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#F3E8FF;color:#6B21A8;"><span class="bi bi-md"><svg><use href="#bi-info"/></svg></span></div>
+        <span class="block-label">Tentang</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#FEF3C7;color:#92400E;"><span class="bi bi-md"><svg><use href="#bi-tag"/></svg></span></div>
+        <span class="block-label">Promo Banner</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#DCFCE7;color:#166534;"><span class="bi bi-md"><svg><use href="#bi-service"/></svg></span></div>
+        <span class="block-label">Layanan</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#FFE4E6;color:#9F1239;"><span class="bi bi-md"><svg><use href="#bi-utensils"/></svg></span></div>
+        <span class="block-label">Menu</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#E0E7FF;color:#3730A3;"><span class="bi bi-md"><svg><use href="#bi-phone"/></svg></span></div>
+        <span class="block-label">Kontak</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#CCFBF1;color:#0F766E;"><span class="bi bi-md"><svg><use href="#bi-link"/></svg></span></div>
+        <span class="block-label">Social Links</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="block-item">
+        <div class="block-icon-wrap" style="background:#FEE2E2;color:#B91C1C;"><span class="bi bi-md"><svg><use href="#bi-map-pin"/></svg></span></div>
+        <span class="block-label">Lokasi</span>
+        <div class="block-actions"><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-up"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button><button class="block-act"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span></button></div>
+      </div>
+      <div class="add-grid">
+        <button class="add-btn"><span class="add-icon bi bi-md"><svg><use href="#bi-image"/></svg></span><span class="add-label">Galeri</span></button>
+        <button class="add-btn"><span class="add-icon bi bi-md"><svg><use href="#bi-star"/></svg></span><span class="add-label">Ulasan</span></button>
+        <button class="add-btn"><span class="add-icon bi bi-md"><svg><use href="#bi-calendar"/></svg></span><span class="add-label">Booking</span></button>
+        <button class="add-btn"><span class="add-icon bi bi-md"><svg><use href="#bi-code"/></svg></span><span class="add-label">HTML</span></button>
+      </div>
+    </div>
+
+    <!-- Sidebar: Theme -->
+    <div class="editor-sidebar" id="sideTheme" style="display:none;">
+      <div class="theme-section">
+        <div class="theme-label">Warna Primer</div>
+        <div class="color-grid">
+          <div class="color-dot active" style="background:#0F172A;"></div>
+          <div class="color-dot" style="background:#1E3A5F;"></div>
+          <div class="color-dot" style="background:#7C3AED;"></div>
+          <div class="color-dot" style="background:#DC2626;"></div>
+          <div class="color-dot" style="background:#059669;"></div>
+          <div class="color-dot" style="background:#EC4899;"></div>
+          <div class="color-dot" style="background:#F97316;"></div>
+          <div class="color-dot" style="background:#0EA5E9;"></div>
+        </div>
+        <label class="input-label">Warna Aksen</label>
+        <div style="display:flex;gap:var(--sp-2);align-items:center;margin-bottom:var(--sp-5);">
+          <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-primary);border:1px solid var(--border);flex-shrink:0;"></div>
+          <input class="input-field" value="#FFCC00" style="font-family:var(--font-mono);font-size:var(--text-xs);" readonly>
+        </div>
+      </div>
+      <div class="theme-section">
+        <div class="theme-label">Font</div>
+        <select class="input-field" style="margin-bottom:var(--sp-4);"><option selected>Inter</option><option>Plus Jakarta Sans</option></select>
+        <div class="theme-label">Gaya Tombol</div>
+        <div class="btn-style-group">
+          <div class="btn-style-opt active" style="border-radius:var(--radius-md);">Rounded</div>
+          <div class="btn-style-opt" style="border-radius:var(--radius-full);">Pill</div>
+          <div class="btn-style-opt" style="border-radius:0;">Square</div>
+        </div>
+      </div>
+      <div class="theme-section">
+        <div class="theme-label">SEO</div>
+        <label class="input-label">Judul SEO <span class="input-hint">42/60</span></label>
+        <input class="input-field" value="Warung Bahari — Restoran & Kafe di Jakarta" readonly style="margin-bottom:var(--sp-3);">
+        <label class="input-label">Deskripsi SEO <span class="input-hint">95/160</span></label>
+        <textarea class="input-field" style="height:56px;resize:none;" readonly>Warung Bahari adalah restoran seafood di Jakarta Selatan. Pesan via WhatsApp, lihat menu & promo.</textarea>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="editor-preview">
+      <div class="phone-frame" id="phoneFrame">
+        <div class="phone-notch"><div class="phone-pill"></div></div>
+        <div class="phone-body">
+          <div class="ph-hero">
+            <div class="ph-logo"><img src="bisnisku-app/public/images/logo/logo-icon.png" alt="B" onerror="this.outerHTML='<span style=font-size:22px;font-weight:800;color:var(--brand-primary);font-family:var(--font-h)>B</span>'"></div>
+            <h2>Warung Bahari</h2>
+            <p>Seafood segar langsung dari laut, bumbu nusantara pilihan.</p>
+            <a href="#" class="ph-wa-btn"><span class="bi bi-sm"><svg><use href="#bi-message-circle"/></svg></span> Hubungi via WhatsApp</a>
+          </div>
+          <div class="ph-section">
+            <h3 class="ph-h3">Tentang Kami</h3>
+            <p class="ph-body-text">Warung Bahari menyajikan hidangan seafood segar sejak 2015. Berlokasi strategis di Jakarta Selatan dengan bahan langsung dari nelayan lokal.</p>
+          </div>
+          <div class="ph-promo">
+            <span class="ph-promo-badge"><span class="bi bi-xs"><svg><use href="#bi-fire"/></svg></span> PROMO</span>
+            <h3>Diskon 20% Paket Keluarga!</h3>
+            <p>Berlaku setiap akhir pekan</p>
+          </div>
+          <div class="ph-section-alt">
+            <h3 class="ph-h3">Layanan Kami</h3>
+            <div class="ph-svc-grid">
+              <div class="ph-svc-card">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=60" alt="">
+                <div class="svc-body"><h4>Dine In</h4><div class="svc-desc">Kapasitas 80 kursi</div><div class="svc-price">Rp 50K — 250K</div></div>
+              </div>
+              <div class="ph-svc-card">
+                <img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=400&q=60" alt="">
+                <div class="svc-body"><h4>Catering</h4><div class="svc-desc">Min. 20 porsi</div><div class="svc-price">Rp 75K/porsi</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-section">
+            <h3 class="ph-h3">Menu</h3>
+            <div class="ph-menu-cat">Hidangan Utama</div>
+            <div class="ph-menu-item">
+              <img src="https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=200&q=60" alt="">
+              <div class="mi-info"><div class="mi-top"><span class="mi-name">Udang Bakar Jumbo <span class="ph-pop">Populer</span></span><span class="mi-price">Rp 125K</span></div><div class="mi-desc">6 ekor udang jumbo, bumbu special</div></div>
+            </div>
+            <div class="ph-menu-item">
+              <img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=200&q=60" alt="">
+              <div class="mi-info"><div class="mi-top"><span class="mi-name">Kepiting Saus Padang <span class="ph-pop">Populer</span></span><span class="mi-price">Rp 180K</span></div><div class="mi-desc">Kepiting 500g, saus Padang homemade</div></div>
+            </div>
+            <div class="ph-menu-cat">Minuman</div>
+            <div class="ph-menu-item">
+              <img src="https://images.unsplash.com/photo-1544252890-c3e95e867389?w=200&q=60" alt="">
+              <div class="mi-info"><div class="mi-top"><span class="mi-name">Es Kelapa Muda</span><span class="mi-price">Rp 25K</span></div></div>
+            </div>
+          </div>
+          <div class="ph-section">
+            <h3 class="ph-h3">Hubungi Kami</h3>
+            <a href="#" class="ph-contact-row"><div class="ph-contact-icon"><span class="bi bi-sm"><svg><use href="#bi-phone"/></svg></span></div>+62 812-3456-7890</a>
+            <a href="#" class="ph-contact-row"><div class="ph-contact-icon"><span class="bi bi-sm"><svg><use href="#bi-message-circle"/></svg></span></div>WhatsApp</a>
+            <a href="#" class="ph-contact-row"><div class="ph-contact-icon"><span class="bi bi-sm"><svg><use href="#bi-mail"/></svg></span></div>info@warungbahari.id</a>
+            <div class="ph-contact-row"><div class="ph-contact-icon"><span class="bi bi-sm"><svg><use href="#bi-map-pin"/></svg></span></div>Jl. Kemang Raya No. 45, Jaksel</div>
+          </div>
+          <div class="ph-social">
+            <a href="#" class="ph-social-btn" style="background:linear-gradient(135deg,#833AB4,#E1306C,#F77737);"><span class="bi bi-sm"><svg><use href="#bi-instagram"/></svg></span> Instagram</a>
+            <a href="#" class="ph-social-btn" style="background:#1877F2;"><span class="bi bi-sm"><svg><use href="#bi-facebook"/></svg></span> Facebook</a>
+            <a href="#" class="ph-social-btn" style="background:#000;"><span class="bi bi-sm"><svg><use href="#bi-external"/></svg></span> TikTok</a>
+          </div>
+          <div class="ph-section-alt">
+            <h3 class="ph-h3">Lokasi</h3>
+            <div class="ph-map"><div class="ph-map-label"><span class="bi bi-xs"><svg><use href="#bi-map-pin"/></svg></span> Jl. Kemang Raya No. 45</div></div>
+          </div>
+          <div class="ph-footer">Warung Bahari &copy; 2026 · Powered by <a href="#">bisnisku.info</a></div>
+          <div class="ph-wa-float"><span class="bi bi-lg"><svg><use href="#bi-message-circle"/></svg></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VIEW 2: PUBLIC PAGE ═══ -->
+<div id="view-public" class="view public-view">
+  <div class="pub-hero">
+    <div class="pub-hero-bg"></div>
+    <div class="pub-logo"><img src="bisnisku-app/public/images/logo/logo-icon.png" alt="B" onerror="this.outerHTML='<span style=font-size:32px;font-weight:800;color:var(--brand-primary);font-family:var(--font-h)>B</span>'"></div>
+    <h1>Warung Bahari</h1>
+    <p class="sub">Seafood segar langsung dari laut, dimasak dengan bumbu nusantara pilihan. Nikmati suasana santai di tepi Jakarta Selatan.</p>
+    <div class="tags">
+      <span class="tag-pill"><span class="bi bi-xs"><svg><use href="#bi-utensils"/></svg></span> Seafood</span>
+      <span class="tag-pill"><span class="bi bi-xs"><svg><use href="#bi-map-pin"/></svg></span> Jakarta Selatan</span>
+      <span class="tag-pill"><span class="bi bi-xs"><svg><use href="#bi-star"/></svg></span> 4.8</span>
+    </div>
+    <a href="#" class="wa-btn"><span class="bi bi-md"><svg><use href="#bi-message-circle"/></svg></span> Hubungi via WhatsApp</a>
+  </div>
+
+  <div class="pub-stats">
+    <div class="pub-stat"><div class="num">8+</div><div class="lbl">Tahun</div></div>
+    <div class="pub-stat"><div class="num">4.8</div><div class="lbl">Rating</div></div>
+    <div class="pub-stat"><div class="num">2K+</div><div class="lbl">Pelanggan</div></div>
+    <div class="pub-stat"><div class="num">50+</div><div class="lbl">Menu</div></div>
+  </div>
+
+  <div class="pub-section"><h2>Tentang Kami</h2><p>Warung Bahari berdiri sejak 2015, menyajikan hidangan seafood segar berkualitas dengan resep bumbu nusantara yang autentik. Berlokasi strategis di Jakarta Selatan dengan suasana nyaman untuk keluarga dan rekan bisnis. Kami berkomitmen menghadirkan pengalaman kuliner terbaik dengan bahan-bahan pilihan langsung dari nelayan lokal.</p></div>
+
+  <div class="pub-promo">
+    <span class="badge"><span class="bi bi-sm"><svg><use href="#bi-fire"/></svg></span> PROMO SPESIAL</span>
+    <h2>Diskon 20% Paket Keluarga!</h2>
+    <p>Berlaku setiap akhir pekan. Ajak keluarga menikmati seafood terbaik.</p>
+    <a href="#" class="cta"><span>Klaim Promo via WhatsApp</span> <span class="bi bi-sm"><svg><use href="#bi-arrow-right"/></svg></span></a>
+  </div>
+
+  <div class="pub-svc">
+    <div class="inner">
+      <h2>Layanan Kami</h2>
+      <div class="pub-svc-grid">
+        <div class="pub-svc-card"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=70" alt=""><div class="body"><h3>Dine In</h3><div class="desc">Makan di tempat dengan suasana nyaman & cozy. Kapasitas 80 kursi indoor + outdoor.</div><div class="meta"><span class="price">Rp 50K — 250K</span></div></div></div>
+        <div class="pub-svc-card"><img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=70" alt=""><div class="body"><h3>Catering</h3><div class="desc">Paket catering untuk acara kantor & keluarga. Minimum 20 porsi.</div><div class="meta"><span class="price">Rp 75K/porsi</span></div></div></div>
+        <div class="pub-svc-card"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=70" alt=""><div class="body"><h3>Private Event</h3><div class="desc">Ruang privat untuk acara spesial, ulang tahun, atau gathering.</div><div class="meta"><span class="price">Rp 2.5 Juta</span><span class="dur">3 jam</span></div></div></div>
+        <div class="pub-svc-card"><img src="https://images.unsplash.com/photo-1526367790999-0150786686a2?w=600&q=70" alt=""><div class="body"><h3>Delivery</h3><div class="desc">Pesan antar via GrabFood, GoFood, atau langsung via WhatsApp.</div><div class="meta"><span class="price">Gratis ongkir 5km</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pub-menu">
+    <h2>Menu</h2>
+    <div class="pub-menu-cat">Hidangan Utama</div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Udang Bakar Jumbo <span class="pub-pop">Populer</span></span><span class="item-price">Rp 125.000</span></div><div class="item-desc">6 ekor udang jumbo, bumbu special, sambal matah, lalapan</div></div></div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Kepiting Saus Padang <span class="pub-pop">Populer</span></span><span class="item-price">Rp 180.000</span></div><div class="item-desc">Kepiting segar 500g, saus Padang homemade, nasi putih</div></div></div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Gurame Goreng Krispi</span><span class="item-price">Rp 95.000</span></div><div class="item-desc">Gurame utuh 800g, goreng krispi, sambal kecap</div></div></div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Sup Ikan Batam</span><span class="item-price">Rp 75.000</span></div><div class="item-desc">Sup ikan kakap segar dengan bumbu rempah khas Batam</div></div></div>
+    <div class="pub-menu-cat">Minuman</div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1544252890-c3e95e867389?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Es Kelapa Muda</span><span class="item-price">Rp 25.000</span></div></div></div>
+    <div class="pub-menu-item"><img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=200&q=60" alt=""><div class="info"><div class="top"><span class="name">Es Jeruk Segar</span><span class="item-price">Rp 18.000</span></div></div></div>
+  </div>
+
+  <div class="pub-contact">
+    <h2>Hubungi Kami</h2>
+    <a href="#" class="pub-ct-row"><div class="pub-ct-icon"><span class="bi bi-md"><svg><use href="#bi-phone"/></svg></span></div>+62 812-3456-7890</a>
+    <a href="#" class="pub-ct-row"><div class="pub-ct-icon"><span class="bi bi-md"><svg><use href="#bi-message-circle"/></svg></span></div>+62 812-3456-7890 (WhatsApp)</a>
+    <a href="#" class="pub-ct-row"><div class="pub-ct-icon"><span class="bi bi-md"><svg><use href="#bi-mail"/></svg></span></div>info@warungbahari.id</a>
+    <div class="pub-ct-row"><div class="pub-ct-icon"><span class="bi bi-md"><svg><use href="#bi-map-pin"/></svg></span></div>Jl. Kemang Raya No. 45, Jakarta Selatan</div>
+  </div>
+
+  <div class="pub-social">
+    <a href="#" class="pub-social-btn" style="background:linear-gradient(135deg,#833AB4,#E1306C,#F77737);"><span class="bi bi-md"><svg><use href="#bi-instagram"/></svg></span> Instagram</a>
+    <a href="#" class="pub-social-btn" style="background:#1877F2;"><span class="bi bi-md"><svg><use href="#bi-facebook"/></svg></span> Facebook</a>
+    <a href="#" class="pub-social-btn" style="background:#000;"><span class="bi bi-md"><svg><use href="#bi-external"/></svg></span> TikTok</a>
+    <a href="#" class="pub-social-btn" style="background:var(--brand-dark);"><span class="bi bi-md"><svg><use href="#bi-globe"/></svg></span> Website</a>
+  </div>
+
+  <div class="pub-map"><div class="inner"><h2>Lokasi</h2><div class="pub-map-frame"><div class="pub-map-label"><span class="bi bi-sm"><svg><use href="#bi-map-pin"/></svg></span> Jl. Kemang Raya No. 45, Jakarta Selatan</div></div></div></div>
+
+  <div class="pub-footer">Warung Bahari &copy; 2026 &middot; Powered by <a href="#">bisnisku.info</a></div>
+  <a href="#" class="floating-wa" id="floatWa"><span class="bi bi-xl"><svg><use href="#bi-message-circle"/></svg></span></a>
+</div>
+
+<!-- ═══ VIEW 3: SEO ═══ -->
+<div id="view-seo" class="view seo-view">
+  <div class="seo-inner">
+    <div class="seo-card">
+      <h3>Google Search Preview</h3>
+      <p class="desc">Bagaimana halaman merchant tampil di hasil pencarian Google</p>
+      <div class="serp">
+        <div class="serp-url"><span class="serp-fav"><img src="bisnisku-app/public/images/logo/logo-icon.png" alt="B" onerror="this.outerHTML='<span style=font-size:9px;font-weight:800;color:var(--brand-primary);font-family:var(--font-h)>B</span>'"></span> bisnisku.info &rsaquo; warung-bahari</div>
+        <div class="serp-title">Warung Bahari — Restoran & Kafe di Jakarta | bisnisku.info</div>
+        <div class="serp-desc">Warung Bahari adalah restoran & kafe di Jakarta. Lihat layanan, menu, ulasan, dan hubungi langsung via WhatsApp.</div>
+        <div class="serp-rich"><span><span class="serp-stars">★★★★</span>★ 4.8</span><span>$$ · Seafood</span><span><span class="bi bi-xs"><svg><use href="#bi-map-pin"/></svg></span> Jakarta Selatan</span><span><span class="bi bi-xs"><svg><use href="#bi-phone"/></svg></span> 0812-3456-7890</span></div>
+      </div>
+      <div class="tag-row"><span class="tag g">✓ Canonical URL</span><span class="tag g">✓ Open Graph</span><span class="tag g">✓ Twitter Card</span><span class="tag g">✓ GEO Meta</span><span class="tag b">✓ Breadcrumbs</span></div>
+    </div>
+
+    <div class="seo-card">
+      <h3>JSON-LD Structured Data</h3>
+      <p class="desc">3 schema: LocalBusiness + BreadcrumbList + WebPage</p>
+      <div class="code-box"><span class="c">// LocalBusiness → Google Rich Snippets</span>
+{
+  <span class="k">"@context"</span>: <span class="s">"https://schema.org"</span>,
+  <span class="k">"@type"</span>: <span class="s">"Restaurant"</span>,
+  <span class="k">"name"</span>: <span class="s">"Warung Bahari"</span>,
+  <span class="k">"url"</span>: <span class="s">"https://bisnisku.info/warung-bahari"</span>,
+  <span class="k">"address"</span>: {
+    <span class="k">"@type"</span>: <span class="s">"PostalAddress"</span>,
+    <span class="k">"addressLocality"</span>: <span class="s">"Jakarta"</span>,
+    <span class="k">"addressCountry"</span>: <span class="s">"ID"</span>
+  },
+  <span class="k">"hasMenu"</span>: { <span class="k">"@type"</span>: <span class="s">"Menu"</span>, ... },
+  <span class="k">"priceRange"</span>: <span class="s">"$$"</span>
+}</div>
+      <div class="tag-row"><span class="tag p">Restaurant</span><span class="tag p">BeautySalon</span><span class="tag p">MedicalBusiness</span><span class="tag p">AutoRepair</span><span class="tag a">Auto-mapped by vertical</span></div>
+    </div>
+
+    <div class="seo-card">
+      <h3>Enhanced Meta Tags</h3>
+      <p class="desc">SEO + Social + GEO metadata otomatis</p>
+      <div class="code-box"><span class="c">&lt;!-- Local search optimized title --&gt;</span>
+&lt;<span class="k">title</span>&gt;<span class="s">Warung Bahari — Restoran & Kafe di Jakarta</span>&lt;/<span class="k">title</span>&gt;
+&lt;<span class="k">link</span> <span class="k">rel</span>=<span class="s">"canonical"</span> <span class="k">href</span>=<span class="s">"https://bisnisku.info/warung-bahari"</span>&gt;
+&lt;<span class="k">meta</span> <span class="k">name</span>=<span class="s">"geo.region"</span> <span class="k">content</span>=<span class="s">"ID-JK"</span>&gt;
+&lt;<span class="k">meta</span> <span class="k">property</span>=<span class="s">"og:locale"</span> <span class="k">content</span>=<span class="s">"id_ID"</span>&gt;
+&lt;<span class="k">meta</span> <span class="k">name</span>=<span class="s">"twitter:card"</span> <span class="k">content</span>=<span class="s">"summary_large_image"</span>&gt;</div>
+    </div>
+
+    <div class="seo-card">
+      <h3>Sitemap & Robots</h3>
+      <p class="desc">Dynamic sitemap + crawl rules</p>
+      <div class="code-box"><span class="c"># robots.txt</span>
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Sitemap: <span class="s">https://bisnisku.info/sitemap.xml</span>
+
+<span class="c"># sitemap.xml (auto-generated)</span>
+&lt;<span class="k">url</span>&gt;
+  &lt;<span class="k">loc</span>&gt;<span class="s">https://bisnisku.info/warung-bahari</span>&lt;/<span class="k">loc</span>&gt;
+  &lt;<span class="k">priority</span>&gt;<span class="n">0.8</span>&lt;/<span class="k">priority</span>&gt;
+&lt;/<span class="k">url</span>&gt;</div>
+    </div>
+
+    <div class="seo-card">
+      <h3>llms.txt — AI Discoverability</h3>
+      <p class="desc">LLM-readable routes agar AI assistant bisa menemukan merchant</p>
+      <div class="llms-grid">
+        <div><div class="llms-label">/llms.txt (site-level)</div><div class="llms-box"><span class="h"># bisnisku.info</span>
+
+<span class="q">> Partner Cerdas untuk Pertumbuhan
+> Bisnis Anda di Era Digital</span>
+
+<span class="h">## Kategori Bisnis</span>
+<span class="li">-</span> Restoran & Kafe (F&B)
+<span class="li">-</span> Salon & Spa (Beauty)
+<span class="li">-</span> Klinik & Kesehatan (Health)
+<span class="li">-</span> Bengkel & Otomotif (Automotive)
+
+<span class="h">## Cara Mengakses</span>
+LLM: bisnisku.info/{slug}/llms.txt</div></div>
+        <div><div class="llms-label">/warung-bahari/llms.txt</div><div class="llms-box"><span class="h"># Warung Bahari</span>
+
+<span class="q">> Restoran & Kafe di Jakarta</span>
+
+<span class="h">## Menu</span>
+<span class="h">### Hidangan Utama</span>
+<span class="li">-</span> Udang Bakar Jumbo: Rp 125.000
+<span class="li">-</span> Kepiting Saus Padang: Rp 180.000
+
+<span class="h">## Kontak</span>
+<span class="li">-</span> WhatsApp: wa.me/628123456789</div></div>
+      </div>
+      <div class="tag-row"><span class="tag g">✓ /llms.txt</span><span class="tag g">✓ /[slug]/llms.txt</span><span class="tag b">text/plain + cache</span><span class="tag a">llmstxt.org</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchView(v, btn) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('floatWa').style.display = v === 'public' ? 'flex' : 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function editorTab(t) {
+  document.getElementById('tabBlocks').classList.toggle('active', t === 'blocks');
+  document.getElementById('tabTheme').classList.toggle('active', t === 'theme');
+  document.getElementById('sideBlocks').style.display = t === 'blocks' ? 'block' : 'none';
+  document.getElementById('sideTheme').style.display = t === 'theme' ? 'block' : 'none';
+}
+function setDevice(d) {
+  document.getElementById('devD').classList.toggle('active', d === 'desktop');
+  document.getElementById('devM').classList.toggle('active', d === 'mobile');
+  document.getElementById('phoneFrame').classList.toggle('desktop', d === 'desktop');
+}
+document.getElementById('floatWa').style.display = 'none';
+</script>
+</body>
+</html>

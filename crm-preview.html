@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 5 Preview — CRM & Customer Database | bisnisku.info</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ════════════════════════════════════════════════
+   BISNISKU DESIGN SYSTEM v3.0 — Token Layer
+   Aligned with globals.css (source of truth)
+   ════════════════════════════════════════════════ */
+:root {
+  /* --- Brand Colors --- */
+  --brand-primary: #FFCC00;
+  --brand-primary-hover: #E6B800;
+  --brand-primary-10: rgba(255,204,0,0.10);
+  --brand-primary-20: rgba(255,204,0,0.20);
+  --brand-dark: #0F172A;
+  --brand-dark-hover: #1E293B;
+  --brand-dark-60: rgba(15,23,42,0.60);
+  --brand-dark-90: rgba(15,23,42,0.90);
+
+  /* --- Semantic Colors (aligned with globals.css) --- */
+  --semantic-success: #10B981;
+  --semantic-warning: #F59E0B;
+  --semantic-error: #EF4444;
+  --semantic-info: #3B82F6;
+
+  /* --- Semantic Light Backgrounds --- */
+  --semantic-success-light: #ECFDF5;
+  --semantic-warning-light: #FFFBEB;
+  --semantic-error-light: #FEF2F2;
+  --semantic-info-light: #EFF6FF;
+
+  /* --- Data Visualization (aligned with globals.css) --- */
+  --data-viz-1: #3B82F6;
+  --data-viz-2: #8B5CF6;
+  --data-viz-3: #F59E0B;
+  --data-viz-4: #EC4899;
+
+  /* --- Surface (aligned with globals.css) --- */
+  --background: #FFFFFF;
+  --foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #FFCC00;
+
+  /* --- Extended Surface --- */
+  --bg-subtle: #F8FAFC;
+  --fg-subtle: #94A3B8;
+  --border-light: #F1F5F9;
+
+  /* --- Sidebar (aligned with globals.css) --- */
+  --sidebar-bg: #0F172A;
+  --sidebar-text: #CBD5E1;
+  --sidebar-active: #FFCC00;
+
+  /* --- Shadows (aligned with globals.css: low/medium/high) --- */
+  --shadow-low: 0px 1px 3px rgba(0,0,0,0.1);
+  --shadow-medium: 0px 10px 15px rgba(0,0,0,0.05);
+  --shadow-high: 0px 20px 25px rgba(0,0,0,0.1);
+
+  /* --- Fonts (aligned with globals.css canonical names) --- */
+  --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* --- Typography Scale --- */
+  --text-2xs: 10px; --text-xs: 12px; --text-sm: 14px; --text-base: 16px;
+  --text-lg: 18px; --text-xl: 20px; --text-2xl: 24px; --text-3xl: 30px;
+  --leading-tight: 1.25; --leading-normal: 1.5;
+
+  /* --- Spacing (8px grid) --- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
+
+  /* --- Radius --- */
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
+
+  /* --- Motion --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms; --duration-normal: 250ms;
+
+  /* ═══════════════════════════════════════════════
+     CRM-Specific Semantic Tokens (stage & tag)
+     All derived from design system palette
+     ═══════════════════════════════════════════════ */
+
+  /* Stage: Lead */
+  --stage-lead-bg: var(--muted);
+  --stage-lead-fg: #475569; /* Slate 600 */
+
+  /* Stage: Prospect */
+  --stage-prospect-bg: var(--semantic-info-light);
+  --stage-prospect-fg: #2563EB; /* Blue 600 */
+
+  /* Stage: Customer */
+  --stage-customer-bg: var(--semantic-success-light);
+  --stage-customer-fg: #059669; /* Emerald 600 */
+
+  /* Stage: VIP */
+  --stage-vip-bg: var(--semantic-warning-light);
+  --stage-vip-fg: #D97706; /* Amber 600 */
+
+  /* Stage: Churned */
+  --stage-churned-bg: var(--semantic-error-light);
+  --stage-churned-fg: #DC2626; /* Red 600 */
+
+  /* Tag: Regular */
+  --tag-regular-bg: #DBEAFE; /* Blue 100 */
+  --tag-regular-fg: #2563EB; /* Blue 600 */
+  --tag-regular-border: #93C5FD; /* Blue 300 */
+
+  /* Tag: VIP */
+  --tag-vip-bg: var(--semantic-warning-light);
+  --tag-vip-fg: #D97706;
+  --tag-vip-border: #FCD34D; /* Amber 300 */
+
+  /* Tag: Wanita */
+  --tag-wanita-bg: #FCE7F3; /* Pink 100 */
+  --tag-wanita-fg: #DB2777; /* Pink 600 */
+  --tag-wanita-border: #F9A8D4; /* Pink 300 */
+
+  /* Tag: Corporate */
+  --tag-corporate-bg: var(--semantic-success-light);
+  --tag-corporate-fg: #059669;
+  --tag-corporate-border: #6EE7B7; /* Emerald 300 */
+
+  /* Tag: Baru (New) */
+  --tag-baru-bg: var(--muted);
+  --tag-baru-fg: #475569; /* Slate 600 */
+
+  /* Tag: At-risk */
+  --tag-atrisk-bg: #FEE2E2; /* Red 100 */
+  --tag-atrisk-fg: #DC2626; /* Red 600 */
+
+  /* Tag: Loyal */
+  --tag-loyal-bg: #DBEAFE;
+  --tag-loyal-fg: #2563EB;
+}
+
+/* RESET */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font-sans);background:var(--muted);color:var(--foreground);line-height:var(--leading-normal);font-size:var(--text-base)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:var(--font-sans);cursor:pointer;border:none;background:none}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-heading);line-height:var(--leading-tight);letter-spacing:-0.02em}
+input,select{font-family:var(--font-sans)}
+
+/* SCROLLBAR (aligned with globals.css) */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--muted)}
+::-webkit-scrollbar-thumb{background:var(--fg-subtle);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted-foreground)}
+
+/* ICON SYSTEM (BiIcon parity: 24x24 viewBox, 1.8px stroke, round caps/joins) */
+.bi{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.bi svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bi-xs{font-size:14px} .bi-sm{font-size:16px} .bi-md{font-size:20px} .bi-lg{font-size:24px} .bi-xl{font-size:32px}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.anim-up{animation:fadeUp 0.5s var(--ease-out) both}
+.anim-up-1{animation-delay:0.05s} .anim-up-2{animation-delay:0.1s}
+.anim-up-3{animation-delay:0.15s} .anim-up-4{animation-delay:0.2s}
+
+/* ════════════════════════════════════════════════
+   TOP NAV
+   ════════════════════════════════════════════════ */
+.top-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--sp-6);height:56px;
+  background:var(--brand-dark);
+  border-bottom:1px solid rgba(255,204,0,0.08);
+}
+.nav-left{display:flex;align-items:center;gap:var(--sp-3)}
+.nav-logo{display:flex;align-items:center;gap:var(--sp-2);color:white;font-family:var(--font-heading);font-weight:700;font-size:var(--text-lg)}
+.nav-logo-img{width:28px;height:28px;object-fit:contain;border-radius:var(--radius-sm)}
+.nav-logo-fallback{width:28px;height:28px;background:var(--brand-primary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--brand-dark);font-weight:800;font-size:var(--text-sm)}
+.nav-breadcrumb{color:var(--fg-subtle);font-size:var(--text-sm);display:flex;align-items:center;gap:var(--sp-2)}
+.nav-breadcrumb span{color:white}
+.nav-right{display:flex;align-items:center;gap:var(--sp-4)}
+.nav-avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--brand-primary);display:flex;align-items:center;justify-content:center;color:var(--brand-dark);font-weight:700;font-size:var(--text-xs)}
+
+/* ════════════════════════════════════════════════
+   SIDEBAR (using sidebar tokens from globals.css)
+   ════════════════════════════════════════════════ */
+.sidebar{
+  position:fixed;top:56px;left:0;bottom:0;width:240px;
+  background:var(--background);border-right:1px solid var(--border);
+  padding:var(--sp-4) 0;overflow-y:auto;z-index:50;
+}
+.side-section{padding:0 var(--sp-3);margin-bottom:var(--sp-6)}
+.side-label{font-size:var(--text-2xs);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--fg-subtle);padding:0 var(--sp-3);margin-bottom:var(--sp-2)}
+.side-item{
+  display:flex;align-items:center;gap:var(--sp-3);
+  padding:var(--sp-2) var(--sp-3);border-radius:var(--radius-md);
+  font-size:var(--text-sm);color:var(--muted-foreground);
+  transition:all var(--duration-fast);cursor:pointer;
+}
+.side-item:hover{background:var(--muted);color:var(--foreground)}
+.side-item.active{background:var(--brand-primary-10);color:var(--brand-dark);font-weight:600}
+.side-item .bi{width:20px;text-align:center}
+.side-badge{margin-left:auto;background:var(--brand-primary);color:var(--brand-dark);font-size:var(--text-2xs);font-weight:700;padding:1px 6px;border-radius:var(--radius-full)}
+
+/* ════════════════════════════════════════════════
+   MAIN CONTENT
+   ════════════════════════════════════════════════ */
+.main{margin-left:240px;margin-top:56px;padding:var(--sp-6);min-height:calc(100vh - 56px)}
+
+/* Page header */
+.page-header{margin-bottom:var(--sp-6)}
+.page-header h1{font-size:var(--text-2xl);font-weight:700;color:var(--foreground)}
+.page-header p{font-size:var(--text-sm);color:var(--muted-foreground);margin-top:var(--sp-1)}
+
+/* ════════════════════════════════════════════════
+   STAT CARDS
+   ════════════════════════════════════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)}
+.stat-card{
+  background:var(--background);border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:var(--sp-5);display:flex;align-items:center;justify-content:space-between;
+  transition:box-shadow var(--duration-normal) var(--ease-out);
+}
+.stat-card:hover{box-shadow:var(--shadow-medium)}
+.stat-label{font-size:var(--text-sm);color:var(--muted-foreground)}
+.stat-value{font-size:var(--text-2xl);font-weight:700;color:var(--foreground);margin-top:var(--sp-1)}
+.stat-change{font-size:var(--text-xs);margin-top:var(--sp-1);display:flex;align-items:center;gap:2px}
+.stat-change.up{color:var(--semantic-success)} .stat-change.down{color:var(--semantic-error)}
+.stat-icon{width:44px;height:44px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center}
+.stat-icon.brand{background:var(--brand-primary-10);color:var(--brand-dark)}
+.stat-icon.success{background:var(--semantic-success-light);color:var(--semantic-success)}
+.stat-icon.warning{background:var(--semantic-warning-light);color:var(--semantic-warning)}
+.stat-icon.error{background:var(--semantic-error-light);color:var(--semantic-error)}
+
+/* ════════════════════════════════════════════════
+   FILTER BAR
+   ════════════════════════════════════════════════ */
+.filter-bar{margin-bottom:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)}
+.filter-top{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3)}
+.search-box{position:relative;flex:1;max-width:400px}
+.search-box .bi{position:absolute;left:var(--sp-3);top:50%;transform:translateY(-50%);color:var(--fg-subtle)}
+.search-box input{
+  width:100%;padding:var(--sp-2) var(--sp-4) var(--sp-2) 36px;
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  font-size:var(--text-sm);outline:none;background:var(--background);
+  transition:border-color var(--duration-fast);
+}
+.search-box input:focus{border-color:var(--brand-primary);box-shadow:0 0 0 3px var(--brand-primary-10)}
+.action-btns{display:flex;gap:var(--sp-2)}
+.btn-secondary{
+  display:flex;align-items:center;gap:var(--sp-2);
+  padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);
+  border-radius:var(--radius-lg);font-size:var(--text-sm);font-weight:500;
+  color:var(--foreground);background:var(--background);
+  transition:all var(--duration-fast);
+}
+.btn-secondary:hover{background:var(--muted)}
+.btn-primary{
+  display:flex;align-items:center;gap:var(--sp-2);
+  padding:var(--sp-2) var(--sp-4);border:none;
+  border-radius:var(--radius-lg);font-size:var(--text-sm);font-weight:600;
+  color:white;background:var(--brand-dark);
+  transition:all var(--duration-fast);
+}
+.btn-primary:hover{background:var(--brand-dark-hover)}
+
+/* Pipeline pills */
+.pipeline-row{display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap}
+.pipeline-label{font-size:var(--text-xs);font-weight:500;color:var(--fg-subtle);margin-right:var(--sp-1)}
+.pill{
+  padding:var(--sp-1) var(--sp-3);border-radius:var(--radius-full);
+  font-size:var(--text-xs);font-weight:500;cursor:pointer;
+  transition:all var(--duration-fast);background:var(--muted);color:var(--muted-foreground);
+}
+.pill:hover{background:var(--border)}
+.pill.active{background:var(--brand-dark);color:white}
+
+/* Tag filter pills (using token classes) */
+.tag-pill{
+  padding:var(--sp-1) var(--sp-2);border-radius:var(--radius-full);
+  font-size:var(--text-xs);font-weight:500;cursor:pointer;
+  transition:all var(--duration-fast);border:1px solid transparent;
+}
+.tag-pill.tag-regular{background:var(--tag-regular-bg);color:var(--tag-regular-fg);border-color:var(--tag-regular-border)}
+.tag-pill.tag-vip{background:var(--tag-vip-bg);color:var(--tag-vip-fg);border-color:var(--tag-vip-border)}
+.tag-pill.tag-wanita{background:var(--tag-wanita-bg);color:var(--tag-wanita-fg);border-color:var(--tag-wanita-border)}
+.tag-pill.tag-corporate{background:var(--tag-corporate-bg);color:var(--tag-corporate-fg);border-color:var(--tag-corporate-border)}
+
+/* ════════════════════════════════════════════════
+   CUSTOMER TABLE
+   ════════════════════════════════════════════════ */
+.table-wrap{
+  background:var(--background);border:1px solid var(--border);border-radius:var(--radius-xl);
+  overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;text-align:left}
+thead tr{background:var(--bg-subtle);border-bottom:1px solid var(--border)}
+th{padding:var(--sp-3) var(--sp-4);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--fg-subtle)}
+th button{display:flex;align-items:center;gap:4px;font-size:inherit;font-weight:inherit;text-transform:inherit;letter-spacing:inherit;color:inherit}
+th button:hover{color:var(--foreground)}
+td{padding:var(--sp-3) var(--sp-4);font-size:var(--text-sm);border-bottom:1px solid var(--border-light)}
+tr.row:hover{background:var(--bg-subtle);cursor:pointer}
+tr.row{transition:background var(--duration-fast)}
+
+/* Customer cell */
+.customer-cell{display:flex;align-items:center;gap:var(--sp-3)}
+.avatar{width:36px;height:36px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-xs);font-weight:600;flex-shrink:0}
+.avatar.img{overflow:hidden}
+.avatar.img img{width:100%;height:100%;object-fit:cover}
+.avatar.initials{background:var(--brand-primary-10);color:var(--brand-dark)}
+.customer-name{font-weight:500;color:var(--foreground)}
+.customer-contact{font-size:var(--text-xs);color:var(--fg-subtle)}
+
+/* Stage badges (using tokenized stage colors) */
+.stage{display:inline-flex;align-items:center;padding:2px 10px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500}
+.stage.lead{background:var(--stage-lead-bg);color:var(--stage-lead-fg)}
+.stage.prospect{background:var(--stage-prospect-bg);color:var(--stage-prospect-fg)}
+.stage.customer{background:var(--stage-customer-bg);color:var(--stage-customer-fg)}
+.stage.vip{background:var(--stage-vip-bg);color:var(--stage-vip-fg)}
+.stage.churned{background:var(--stage-churned-bg);color:var(--stage-churned-fg)}
+
+/* Tag inline (using tokenized tag colors) */
+.tag-list{display:flex;flex-wrap:wrap;gap:4px}
+.tag-inline{font-size:var(--text-xs);font-weight:500;padding:1px var(--sp-2);border-radius:var(--radius-full)}
+.tag-inline.tag-regular{background:var(--tag-regular-bg);color:var(--tag-regular-fg)}
+.tag-inline.tag-vip{background:var(--tag-vip-bg);color:var(--tag-vip-fg)}
+.tag-inline.tag-wanita{background:var(--tag-wanita-bg);color:var(--tag-wanita-fg)}
+.tag-inline.tag-corporate{background:var(--tag-corporate-bg);color:var(--tag-corporate-fg)}
+.tag-inline.tag-baru{background:var(--tag-baru-bg);color:var(--tag-baru-fg)}
+.tag-inline.tag-atrisk{background:var(--tag-atrisk-bg);color:var(--tag-atrisk-fg)}
+.tag-inline.tag-loyal{background:var(--tag-loyal-bg);color:var(--tag-loyal-fg)}
+.tag-more{font-size:var(--text-xs);color:var(--fg-subtle)}
+
+/* Currency */
+.currency{text-align:right;font-variant-numeric:tabular-nums}
+.visits{text-align:center}
+.date{color:var(--muted-foreground)}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) var(--sp-4);border-top:1px solid var(--border)}
+.pagination-info{font-size:var(--text-sm);color:var(--muted-foreground)}
+.pagination-btns{display:flex;gap:var(--sp-2)}
+.page-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border:1px solid var(--border);
+  border-radius:var(--radius-md);font-size:var(--text-sm);
+  color:var(--muted-foreground);transition:all var(--duration-fast);
+}
+.page-btn:hover{background:var(--muted);color:var(--foreground)}
+.page-btn.active{background:var(--brand-dark);color:white;border-color:var(--brand-dark)}
+
+/* ════════════════════════════════════════════════
+   DETAIL PANEL (slide-over)
+   ════════════════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;z-index:200;display:flex;justify-content:flex-end;
+  pointer-events:none;opacity:0;transition:opacity var(--duration-normal);
+}
+.overlay.open{pointer-events:all;opacity:1}
+.overlay-bg{position:absolute;inset:0;background:rgba(0,0,0,0.3)}
+.detail-panel{
+  position:relative;width:480px;max-width:90vw;height:100%;
+  background:var(--background);box-shadow:var(--shadow-high);overflow-y:auto;
+  transform:translateX(100%);transition:transform 0.35s var(--ease-out);
+}
+.overlay.open .detail-panel{transform:translateX(0)}
+
+.detail-header{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--sp-4) var(--sp-6);border-bottom:1px solid var(--border);
+  background:var(--background);
+}
+.detail-header h2{font-size:var(--text-lg);font-weight:600}
+.detail-close{padding:var(--sp-1);border-radius:var(--radius-md);color:var(--muted-foreground)}
+.detail-close:hover{background:var(--muted);color:var(--foreground)}
+
+.detail-body{padding:var(--sp-6)}
+
+/* Profile header */
+.profile-header{display:flex;gap:var(--sp-4);margin-bottom:var(--sp-6)}
+.profile-avatar{width:64px;height:64px;border-radius:var(--radius-full);overflow:hidden;flex-shrink:0}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-avatar.initials{display:flex;align-items:center;justify-content:center;background:var(--brand-primary-10);color:var(--brand-dark);font-size:var(--text-xl);font-weight:700}
+.profile-name{font-size:var(--text-xl);font-weight:600}
+.profile-meta{display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-1)}
+.profile-source{font-size:var(--text-xs);color:var(--muted-foreground)}
+.profile-contact{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--text-sm);color:var(--muted-foreground);margin-top:var(--sp-2)}
+
+/* Metrics grid */
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-bottom:var(--sp-6)}
+.metric-box{background:var(--bg-subtle);border-radius:var(--radius-lg);padding:var(--sp-3);text-align:center}
+.metric-val{font-size:var(--text-lg);font-weight:700}
+.metric-lbl{font-size:var(--text-xs);color:var(--muted-foreground)}
+
+/* Tags section */
+.tags-section{margin-bottom:var(--sp-6)}
+.tags-section h4{font-size:var(--text-sm);font-weight:500;margin-bottom:var(--sp-2)}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.detail-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:var(--sp-1) var(--sp-2);border-radius:var(--radius-full);
+  font-size:var(--text-xs);font-weight:500;
+}
+.detail-tag.tag-vip{background:var(--tag-vip-bg);color:var(--tag-vip-fg)}
+.detail-tag.tag-wanita{background:var(--tag-wanita-bg);color:var(--tag-wanita-fg)}
+.detail-tag.tag-loyal{background:var(--tag-loyal-bg);color:var(--tag-loyal-fg)}
+.detail-tag .remove{opacity:0.5;cursor:pointer}
+.detail-tag .remove:hover{opacity:1}
+.add-tag-btn{
+  display:inline-flex;align-items:center;gap:2px;
+  padding:var(--sp-1) var(--sp-2);border-radius:var(--radius-full);
+  font-size:var(--text-xs);color:var(--muted-foreground);
+  border:1px dashed var(--border);cursor:pointer;
+}
+.add-tag-btn:hover{border-color:var(--brand-primary);color:var(--brand-dark)}
+
+/* Detail tabs */
+.detail-tabs{display:flex;gap:var(--sp-4);border-bottom:1px solid var(--border);margin-bottom:var(--sp-4)}
+.dtab{
+  padding-bottom:var(--sp-2);font-size:var(--text-sm);font-weight:500;
+  color:var(--muted-foreground);border-bottom:2px solid transparent;cursor:pointer;
+  transition:all var(--duration-fast);
+}
+.dtab:hover{color:var(--foreground)}
+.dtab.active{color:var(--foreground);border-bottom-color:var(--brand-primary)}
+
+/* Overview grid */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+.overview-item{font-size:var(--text-sm)}
+.overview-item .olabel{color:var(--muted-foreground);margin-bottom:2px}
+.overview-item .ovalue{font-weight:500}
+
+/* Notes */
+.note-input{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.note-input input{
+  flex:1;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);
+  border-radius:var(--radius-lg);font-size:var(--text-sm);outline:none;
+}
+.note-input input:focus{border-color:var(--brand-primary)}
+.note-card{
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--sp-3);margin-bottom:var(--sp-2);font-size:var(--text-sm);
+}
+.note-card.pinned{border-color:var(--brand-primary-20);background:var(--brand-primary-10)}
+.note-date{font-size:var(--text-xs);color:var(--muted-foreground);margin-top:var(--sp-2)}
+
+/* Activity timeline */
+.activity-item{
+  display:flex;align-items:flex-start;gap:var(--sp-3);
+  padding:var(--sp-3);border:1px solid var(--border);
+  border-radius:var(--radius-lg);margin-bottom:var(--sp-2);
+}
+.activity-icon{
+  width:32px;height:32px;border-radius:var(--radius-full);
+  background:var(--muted);display:flex;align-items:center;justify-content:center;
+  color:var(--muted-foreground);flex-shrink:0;
+}
+.activity-info{flex:1}
+.activity-type{font-size:var(--text-sm);font-weight:500;text-transform:capitalize}
+.activity-desc{font-size:var(--text-xs);color:var(--muted-foreground)}
+.activity-amount{font-size:var(--text-xs);font-weight:500;color:var(--semantic-success)}
+.activity-date{font-size:var(--text-xs);color:var(--fg-subtle);flex-shrink:0}
+
+/* ════════════════════════════════════════════════
+   SPRINT BADGE
+   ════════════════════════════════════════════════ */
+.sprint-badge{
+  position:fixed;bottom:var(--sp-6);right:var(--sp-6);z-index:300;
+  display:flex;align-items:center;gap:var(--sp-2);
+  padding:var(--sp-3) var(--sp-5);
+  background:var(--brand-dark);color:white;
+  border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:600;
+  box-shadow:var(--shadow-medium);
+}
+.sprint-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-primary);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+</style>
+</head>
+<body>
+
+<!-- ═══════ SVG ICON DEFS ═══════ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="bi-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="bi-trending-up" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+    <symbol id="bi-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <symbol id="bi-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="bi-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="bi-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="bi-arrow-left" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+    <symbol id="bi-chevron-down" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="bi-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+    <symbol id="bi-chevron-right" viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></symbol>
+    <symbol id="bi-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="bi-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="bi-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="bi-tag" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></symbol>
+    <symbol id="bi-gift" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></symbol>
+    <symbol id="bi-message-circle" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></symbol>
+    <symbol id="bi-bar-chart" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+    <symbol id="bi-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="bi-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.98.37 1.94.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.87.33 1.83.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="bi-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></symbol>
+    <symbol id="bi-map-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="bi-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="bi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <symbol id="bi-whatsapp" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12 2C6.48 2 2 6.48 2 12c0 1.89.53 3.66 1.44 5.17L2 22l4.83-1.44A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></symbol>
+    <symbol id="bi-fire" viewBox="0 0 24 24"><path d="M12 12c-2-2.67-4-4-4-6.5a4 4 0 0 1 8 0c0 2.5-2 3.83-4 6.5z"/><path d="M8 21c0-3 2.5-5 4-7 1.5 2 4 4 4 7a4 4 0 0 1-8 0z"/></symbol>
+    <symbol id="bi-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="bi-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="bi-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <!-- Additional CRM icons -->
+    <symbol id="bi-filter" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+    <symbol id="bi-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="bi-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  </defs>
+</svg>
+
+<!-- ═══════ TOP NAV ═══════ -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <div class="nav-logo">
+      <img
+        class="nav-logo-img"
+        src="bisnisku-app/public/images/logo/logo-icon.png"
+        alt="Bisnisku"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      >
+      <div class="nav-logo-fallback" style="display:none">B</div>
+      bisnisku
+    </div>
+    <div class="nav-breadcrumb">
+      / Dashboard / <span>Pelanggan</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="bi bi-md" style="color:var(--fg-subtle)"><svg><use href="#bi-settings"/></svg></span>
+    <div class="nav-avatar">GV</div>
+  </div>
+</nav>
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside class="sidebar">
+  <div class="side-section">
+    <div class="side-label">Menu Utama</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-home"/></svg></span> Dashboard</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-globe"/></svg></span> Bio Page</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-layers"/></svg></span> Layanan</div>
+    <div class="side-item active"><span class="bi bi-md"><svg><use href="#bi-users"/></svg></span> Pelanggan <span class="side-badge">847</span></div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-message-circle"/></svg></span> WhatsApp</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-gift"/></svg></span> Loyalty</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-tag"/></svg></span> Produk</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-bar-chart"/></svg></span> Laporan</div>
+  </div>
+  <div class="side-section">
+    <div class="side-label">Pengaturan</div>
+    <div class="side-item"><span class="bi bi-md"><svg><use href="#bi-settings"/></svg></span> Pengaturan</div>
+  </div>
+</aside>
+
+<!-- ═══════ MAIN CONTENT ═══════ -->
+<main class="main">
+  <!-- Page header -->
+  <div class="page-header anim-up">
+    <h1>Pelanggan</h1>
+    <p>Kelola database pelanggan, tag, dan pipeline penjualan Anda.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card anim-up anim-up-1">
+      <div>
+        <div class="stat-label">Total Pelanggan</div>
+        <div class="stat-value">847</div>
+        <div class="stat-change up"><span class="bi bi-xs"><svg><use href="#bi-trending-up"/></svg></span> +12% bulan ini</div>
+      </div>
+      <div class="stat-icon brand"><span class="bi bi-lg"><svg><use href="#bi-users"/></svg></span></div>
+    </div>
+    <div class="stat-card anim-up anim-up-2">
+      <div>
+        <div class="stat-label">Baru Bulan Ini</div>
+        <div class="stat-value">63</div>
+        <div class="stat-change up"><span class="bi bi-xs"><svg><use href="#bi-trending-up"/></svg></span> +8% dari April</div>
+      </div>
+      <div class="stat-icon success"><span class="bi bi-lg"><svg><use href="#bi-trending-up"/></svg></span></div>
+    </div>
+    <div class="stat-card anim-up anim-up-3">
+      <div>
+        <div class="stat-label">VIP</div>
+        <div class="stat-value">42</div>
+        <div class="stat-change up"><span class="bi bi-xs"><svg><use href="#bi-trending-up"/></svg></span> 5% dari total</div>
+      </div>
+      <div class="stat-icon warning"><span class="bi bi-lg"><svg><use href="#bi-heart"/></svg></span></div>
+    </div>
+    <div class="stat-card anim-up anim-up-4">
+      <div>
+        <div class="stat-label">Berisiko Churn</div>
+        <div class="stat-value">28</div>
+        <div class="stat-change down"><span class="bi bi-xs"><svg><use href="#bi-eye"/></svg></span> >60 hari tidak aktif</div>
+      </div>
+      <div class="stat-icon error"><span class="bi bi-lg"><svg><use href="#bi-eye"/></svg></span></div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar anim-up" style="animation-delay:0.25s">
+    <div class="filter-top">
+      <div class="search-box">
+        <span class="bi bi-sm"><svg><use href="#bi-search"/></svg></span>
+        <input type="text" placeholder="Cari nama, telepon, email..." value=""/>
+      </div>
+      <div class="action-btns">
+        <button class="btn-secondary">
+          <span class="bi bi-sm"><svg><use href="#bi-upload"/></svg></span>
+          Import CSV
+        </button>
+        <button class="btn-primary">
+          <span class="bi bi-sm"><svg><use href="#bi-plus"/></svg></span>
+          Tambah Pelanggan
+        </button>
+      </div>
+    </div>
+    <div class="pipeline-row">
+      <span class="pipeline-label">Pipeline:</span>
+      <span class="pill active" onclick="filterStage(this)">Semua</span>
+      <span class="pill" onclick="filterStage(this)">Lead</span>
+      <span class="pill" onclick="filterStage(this)">Prospek</span>
+      <span class="pill" onclick="filterStage(this)">Pelanggan</span>
+      <span class="pill" onclick="filterStage(this)">VIP</span>
+      <span class="pill" onclick="filterStage(this)">Churned</span>
+
+      <span class="pipeline-label" style="margin-left:var(--sp-4)">Tag:</span>
+      <span class="tag-pill tag-regular" onclick="this.classList.toggle('active')">Regular</span>
+      <span class="tag-pill tag-vip" onclick="this.classList.toggle('active')">VIP</span>
+      <span class="tag-pill tag-wanita" onclick="this.classList.toggle('active')">Wanita</span>
+      <span class="tag-pill tag-corporate" onclick="this.classList.toggle('active')">Corporate</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap anim-up" style="animation-delay:0.3s">
+    <table>
+      <thead>
+        <tr>
+          <th><button>Nama <span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button></th>
+          <th>Status</th>
+          <th>Tag</th>
+          <th style="text-align:right"><button>Total Belanja <span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button></th>
+          <th style="text-align:center"><button>Kunjungan</button></th>
+          <th><button>Terakhir <span class="bi bi-xs"><svg><use href="#bi-chevron-down"/></svg></span></button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar img"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=60" alt=""></div><div><div class="customer-name">Sari Dewi</div><div class="customer-contact">+62 812-3456-7890</div></div></div></td>
+          <td><span class="stage vip">VIP</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-vip">VIP</span><span class="tag-inline tag-wanita">Wanita</span></div></td>
+          <td class="currency">Rp 8.450.000</td>
+          <td class="visits">24</td>
+          <td class="date">18 Apr 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar initials">BH</div><div><div class="customer-name">Budi Hartono</div><div class="customer-contact">budi.h@gmail.com</div></div></div></td>
+          <td><span class="stage customer">Pelanggan</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-regular">Regular</span><span class="tag-inline tag-corporate">Corporate</span></div></td>
+          <td class="currency">Rp 3.200.000</td>
+          <td class="visits">12</td>
+          <td class="date">15 Apr 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=60" alt=""></div><div><div class="customer-name">Andi Prasetyo</div><div class="customer-contact">+62 878-5551-2234</div></div></div></td>
+          <td><span class="stage prospect">Prospek</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-regular">Regular</span></div></td>
+          <td class="currency">Rp 750.000</td>
+          <td class="visits">3</td>
+          <td class="date">10 Apr 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar img"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=60" alt=""></div><div><div class="customer-name">Rina Susanti</div><div class="customer-contact">rina.s@outlook.com</div></div></div></td>
+          <td><span class="stage vip">VIP</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-vip">VIP</span><span class="tag-inline tag-wanita">Wanita</span><span class="tag-more">+1</span></div></td>
+          <td class="currency">Rp 12.100.000</td>
+          <td class="visits">38</td>
+          <td class="date">19 Apr 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar initials">MW</div><div><div class="customer-name">Made Wibawa</div><div class="customer-contact">+62 819-7788-3344</div></div></div></td>
+          <td><span class="stage lead">Lead</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-baru">Baru</span></div></td>
+          <td class="currency">-</td>
+          <td class="visits">0</td>
+          <td class="date">-</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar img"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=60" alt=""></div><div><div class="customer-name">Dimas Kurniawan</div><div class="customer-contact">dimas.k@perusahaan.co.id</div></div></div></td>
+          <td><span class="stage customer">Pelanggan</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-corporate">Corporate</span></div></td>
+          <td class="currency">Rp 4.800.000</td>
+          <td class="visits">15</td>
+          <td class="date">17 Apr 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar initials">YP</div><div><div class="customer-name">Yuni Puspita</div><div class="customer-contact">+62 856-4433-2211</div></div></div></td>
+          <td><span class="stage churned">Churned</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-atrisk">At-risk</span></div></td>
+          <td class="currency">Rp 1.350.000</td>
+          <td class="visits">5</td>
+          <td class="date">12 Feb 2026</td>
+        </tr>
+        <tr class="row" onclick="openDetail()">
+          <td><div class="customer-cell"><div class="avatar img"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=60" alt=""></div><div><div class="customer-name">Reza Firmansyah</div><div class="customer-contact">+62 813-9988-7766</div></div></div></td>
+          <td><span class="stage customer">Pelanggan</span></td>
+          <td><div class="tag-list"><span class="tag-inline tag-regular">Regular</span></div></td>
+          <td class="currency">Rp 2.150.000</td>
+          <td class="visits">8</td>
+          <td class="date">14 Apr 2026</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Menampilkan 1-8 dari 847 pelanggan</div>
+      <div class="pagination-btns">
+        <button class="page-btn"><span class="bi bi-xs"><svg><use href="#bi-chevron-left"/></svg></span></button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">...</button>
+        <button class="page-btn">106</button>
+        <button class="page-btn"><span class="bi bi-xs"><svg><use href="#bi-chevron-right"/></svg></span></button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════ DETAIL PANEL ═══════ -->
+<div class="overlay" id="detailOverlay">
+  <div class="overlay-bg" onclick="closeDetail()"></div>
+  <div class="detail-panel">
+    <div class="detail-header">
+      <h2>Detail Pelanggan</h2>
+      <button class="detail-close" onclick="closeDetail()"><span class="bi bi-md"><svg><use href="#bi-x"/></svg></span></button>
+    </div>
+    <div class="detail-body">
+      <!-- Profile header -->
+      <div class="profile-header">
+        <div class="profile-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&q=70" alt=""></div>
+        <div>
+          <div class="profile-name">Sari Dewi</div>
+          <div class="profile-meta">
+            <span class="stage vip">VIP</span>
+            <span class="profile-source">via walk_in</span>
+          </div>
+          <div class="profile-contact"><span class="bi bi-xs"><svg><use href="#bi-phone"/></svg></span> +62 812-3456-7890</div>
+          <div class="profile-contact"><span class="bi bi-xs"><svg><use href="#bi-mail"/></svg></span> sari.dewi@email.com</div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-box"><div class="metric-val">24</div><div class="metric-lbl">Kunjungan</div></div>
+        <div class="metric-box"><div class="metric-val">8.4M</div><div class="metric-lbl">Total Belanja</div></div>
+        <div class="metric-box"><div class="metric-val">480</div><div class="metric-lbl">Poin</div></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-section">
+        <h4>Tag</h4>
+        <div class="tags-wrap">
+          <span class="detail-tag tag-vip">VIP <span class="remove"><span class="bi bi-xs"><svg><use href="#bi-x"/></svg></span></span></span>
+          <span class="detail-tag tag-wanita">Wanita <span class="remove"><span class="bi bi-xs"><svg><use href="#bi-x"/></svg></span></span></span>
+          <span class="detail-tag tag-loyal">Loyal <span class="remove"><span class="bi bi-xs"><svg><use href="#bi-x"/></svg></span></span></span>
+          <span class="add-tag-btn"><span class="bi bi-xs"><svg><use href="#bi-plus"/></svg></span> Tag</span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="detail-tabs">
+        <span class="dtab active" onclick="detailTab(this,'overview')">Ikhtisar</span>
+        <span class="dtab" onclick="detailTab(this,'notes')">Catatan</span>
+        <span class="dtab" onclick="detailTab(this,'activity')">Aktivitas</span>
+      </div>
+
+      <!-- Tab: Overview -->
+      <div id="dtab-overview">
+        <div class="overview-grid">
+          <div class="overview-item"><div class="olabel">Kunjungan pertama</div><div class="ovalue">15 Jan 2025</div></div>
+          <div class="overview-item"><div class="olabel">Kunjungan terakhir</div><div class="ovalue">18 Apr 2026</div></div>
+          <div class="overview-item"><div class="olabel">Rata-rata belanja</div><div class="ovalue">Rp 352.000</div></div>
+          <div class="overview-item"><div class="olabel">Ulang tahun</div><div class="ovalue">12 Agustus</div></div>
+        </div>
+        <div class="overview-item" style="margin-top:var(--sp-4)"><div class="olabel">Alamat</div><div class="ovalue">Jl. Sudirman No. 88, Jaksel</div></div>
+      </div>
+
+      <!-- Tab: Notes (hidden) -->
+      <div id="dtab-notes" style="display:none">
+        <div class="note-input"><input type="text" placeholder="Tambah catatan..."/></div>
+        <div class="note-card pinned">
+          <div>Prefer tempat duduk dekat jendela. Alergi kacang.</div>
+          <div class="note-date">12 Mar 2026, 14:30</div>
+        </div>
+        <div class="note-card">
+          <div>Minta invoice corporate untuk perusahaan PT Maju Jaya.</div>
+          <div class="note-date">5 Feb 2026, 09:15</div>
+        </div>
+        <div class="note-card">
+          <div>Sudah kirim voucher birthday lewat WA — sangat appreciate.</div>
+          <div class="note-date">12 Agu 2025, 10:00</div>
+        </div>
+      </div>
+
+      <!-- Tab: Activity (hidden) -->
+      <div id="dtab-activity" style="display:none">
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-map-pin"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Kunjungan</div><div class="activity-desc">Dine in, meja 12, 4 orang</div></div>
+          <div class="activity-date">18 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-tag"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Pembelian</div><div class="activity-desc">Paket Keluarga + 2 Es Kelapa</div><div class="activity-amount">Rp 425.000</div></div>
+          <div class="activity-date">18 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-whatsapp"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">WhatsApp</div><div class="activity-desc">Booking konfirmasi dikirim</div></div>
+          <div class="activity-date">17 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-calendar"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Booking</div><div class="activity-desc">18 Apr, 19:00, 4 tamu</div></div>
+          <div class="activity-date">16 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-star"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Review</div><div class="activity-desc">"Makanan enak, pelayanan ramah!" — 5 bintang</div></div>
+          <div class="activity-date">12 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-gift"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Loyalty Redeem</div><div class="activity-desc">Tukar 200 poin → Diskon 50K</div></div>
+          <div class="activity-date">8 Apr</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon"><span class="bi bi-sm"><svg><use href="#bi-fire"/></svg></span></div>
+          <div class="activity-info"><div class="activity-type">Promo Used</div><div class="activity-desc">DISKON20 — Paket Keluarga</div><div class="activity-amount">- Rp 50.000</div></div>
+          <div class="activity-date">5 Apr</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sprint badge -->
+<div class="sprint-badge">
+  <span class="dot"></span>
+  Sprint 5 — CRM & Customer Database
+</div>
+
+<script>
+function filterStage(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+function openDetail() {
+  document.getElementById('detailOverlay').classList.add('open');
+}
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+}
+function detailTab(el, tab) {
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dtab-overview').style.display = tab === 'overview' ? 'block' : 'none';
+  document.getElementById('dtab-notes').style.display = tab === 'notes' ? 'block' : 'none';
+  document.getElementById('dtab-activity').style.display = tab === 'activity' ? 'block' : 'none';
+}
+</script>
+</body>
+</html>
