@@ -1,8 +1,7 @@
-"use server";
-
 /**
  * Xendit Webhook Verification & Processing
  * Verifies callback token and handles idempotent event processing.
+ * NOTE: This is NOT a server action file — it's a utility module imported by the webhook API route.
  */
 
 import { serverEnv } from "@/config/env";
