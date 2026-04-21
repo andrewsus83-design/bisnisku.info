@@ -72,12 +72,12 @@ export async function completeOnboarding(input: OnboardingInput) {
     city,
     website: website || null,
     phone: whatsapp || null,
+    whatsapp: whatsapp || null,
     instagram: instagram || null,
     facebook: facebook || null,
     tiktok: tiktok || null,
-    tier: "free",
-    claim_status: "verified",
-    is_active: true,
+    plan: "free",
+    is_verified: true,
   });
 
   if (bizError) {
