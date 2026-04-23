@@ -1,13 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useContentStore } from "@/stores/content-store";
-import { contentTypeLabels, type ContentType } from "@/lib/validations/content";
+import { contentTypeLabels, type ContentType, type CalendarEvent } from "@/lib/validations/content";
 import {
   ChevronLeft,
   ChevronRight,
   CalendarDays,
   FileText,
   Megaphone,
+  ExternalLink,
+  X,
 } from "lucide-react";
 
 const MONTH_NAMES = [
@@ -26,9 +29,29 @@ const typeColors: Record<string, string> = {
   social: "bg-sky-100 text-sky-700 border-sky-200",
 };
 
+/** Build Google Calendar URL for an event */
+function buildGCalUrl(event: CalendarEvent): string {
+  const title = encodeURIComponent(event.title);
+  // Parse date — format: YYYY-MM-DD or YYYY-MM-DDTHH:mm
+  const dateClean = event.date.replace(/[-:]/g, "").replace("T", "T");
+  // All-day event: use date format YYYYMMDD/YYYYMMDD
+  const startDate = dateClean.slice(0, 8);
+  // End date = next day for all-day events
+  const d = new Date(event.date);
+  d.setDate(d.getDate() + 1);
+  const endDate = d.toISOString().slice(0, 10).replace(/-/g, "");
+
+  const details = encodeURIComponent(
+    `[${event.type === "content" ? "Konten" : "Campaign"}] ${contentTypeLabels[event.content_type] ?? event.content_type}\nStatus: ${event.status}\n\nDibuat oleh Bisnisku.info`
+  );
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&sf=true`;
+}
+
 export function ContentCalendar() {
   const { calendarEvents, calendarMonth, calendarYear, setCalendarMonth } =
     useContentStore();
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
   function prevMonth() {
     if (calendarMonth === 1) {
@@ -162,9 +185,10 @@ export function ContentCalendar() {
                   </div>
                   <div className="space-y-0.5">
                     {events.slice(0, 2).map((ev) => (
-                      <div
+                      <button
                         key={ev.id}
-                        className={`flex items-center gap-1 truncate rounded border px-1 py-0.5 text-[9px] font-medium ${
+                        onClick={() => setSelectedEvent(ev)}
+                        className={`flex w-full items-center gap-1 truncate rounded border px-1 py-0.5 text-left text-[9px] font-medium transition-opacity hover:opacity-80 ${
                           typeColors[ev.content_type] ?? "bg-slate-100 text-slate-600 border-slate-200"
                         }`}
                       >
@@ -174,12 +198,15 @@ export function ContentCalendar() {
                           <Megaphone className="h-2.5 w-2.5 shrink-0" />
                         )}
                         <span className="truncate">{ev.title}</span>
-                      </div>
+                      </button>
                     ))}
                     {events.length > 2 && (
-                      <div className="text-[9px] text-muted-foreground">
+                      <button
+                        onClick={() => setSelectedEvent(events[2])}
+                        className="text-[9px] text-muted-foreground hover:text-brand-dark"
+                      >
                         +{events.length - 2} lagi
-                      </div>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -202,6 +229,95 @@ export function ContentCalendar() {
           </div>
         ))}
       </div>
+
+      {/* Event Detail Popup */}
+      {selectedEvent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl">
+            <div className="mb-3 flex items-start justify-between">
+              <div className="flex items-center gap-2">
+                {selectedEvent.type === "content" ? (
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100">
+                    <FileText className="h-4 w-4 text-blue-600" />
+                  </div>
+                ) : (
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-100">
+                    <Megaphone className="h-4 w-4 text-pink-600" />
+                  </div>
+                )}
+                <div>
+                  <h4 className="text-sm font-bold text-brand-dark">
+                    {selectedEvent.title}
+                  </h4>
+                  <p className="text-[11px] text-muted-foreground">
+                    {selectedEvent.type === "content" ? "Konten" : "Campaign"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedEvent(null)}
+                className="rounded-full p-1 text-muted-foreground hover:bg-slate-100 hover:text-brand-dark"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mb-4 space-y-2 rounded-xl bg-slate-50 p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-muted-foreground">Tanggal</span>
+                <span className="text-xs font-medium text-brand-dark">
+                  {new Date(selectedEvent.date).toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-muted-foreground">Tipe</span>
+                <span
+                  className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
+                    typeColors[selectedEvent.content_type] ?? "bg-slate-100 text-slate-600 border-slate-200"
+                  }`}
+                >
+                  {contentTypeLabels[selectedEvent.content_type] ?? selectedEvent.content_type}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-muted-foreground">Status</span>
+                <span className="text-xs font-medium text-brand-dark capitalize">
+                  {selectedEvent.status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-muted-foreground">Channel</span>
+                <span className="text-xs font-medium text-brand-dark capitalize">
+                  {selectedEvent.channel}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <a
+                href={buildGCalUrl(selectedEvent)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-brand-primary py-2.5 text-sm font-semibold text-brand-dark hover:bg-brand-primary/90"
+              >
+                <CalendarDays className="h-4 w-4" />
+                Add to Google Calendar
+              </a>
+              <button
+                onClick={() => setSelectedEvent(null)}
+                className="rounded-full border border-border px-4 py-2.5 text-sm font-medium text-brand-dark hover:bg-slate-50"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
