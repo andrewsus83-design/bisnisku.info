@@ -52,7 +52,7 @@ export const sidebarNav: NavGroup[] = [
   {
     title: "Marketing",
     items: [
-      { label: "Konten", href: "/dashboard/content", icon: FileText, sprint: 7 },
+      { label: "Konten", href: "/dashboard/content", icon: FileText },
       { label: "Produk", href: "/dashboard/products", icon: ShoppingBag, sprint: 8 },
       { label: "Landing Page AI", href: "/dashboard/landing-page", icon: Sparkles, sprint: 9 },
       { label: "Growth Tools", href: "/dashboard/growth", icon: TrendingUp, sprint: 10 },

@@ -33,4 +33,8 @@ export const serverEnv = {
   FONNTE_TOKEN: process.env.BISNISKU_FONNTE_TOKEN ?? "",
   GOOGLE_PLACES_API: process.env.BISNISKU_GOOGLE_PLACES_API ?? "",
   RESEND_API: process.env.BISNISKU_RESEND_API ?? "",
+
+  // AI Content Generation
+  FAL_KEY: process.env.BISNISKU_FAL_AI_API_KEY ?? "",
+  ELEVENLABS_API_KEY: process.env.BISNISKU_ELEVEN_LAB_API_KEY ?? "",
 } as const;
